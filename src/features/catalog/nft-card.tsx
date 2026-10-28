@@ -17,7 +17,9 @@ interface NftCardProps {
 
 export function NftCard({
   nft,
-  sizes = '(min-width: 1024px) 240px, 45vw',
+  // Largura real do card na grade (2 colunas no celular, 3 a partir de 640 px, coluna de
+  // filtros a partir de 1024 px): um valor folgado faria o celular baixar a variante de 640 px.
+  sizes = '(min-width: 1024px) 270px, (min-width: 640px) calc(33vw - 25px), calc(50vw - 28px)',
   priority,
   showFavorite = 'mobile',
 }: NftCardProps) {

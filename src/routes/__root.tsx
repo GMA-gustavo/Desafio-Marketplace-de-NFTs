@@ -16,12 +16,13 @@ import { Toaster } from '@/components/ui/sonner'
 import { SessionWatcher } from '@/features/auth/session-watcher'
 import { PendingOrderBanner } from '@/features/orders/pending-order-banner'
 import { env } from '@/lib/env'
+import { networkReady } from '@/lib/network-ready'
 import { DESKTOP_QUERY, useMediaQuery } from '@/lib/use-media-query'
 import { cn } from '@/lib/utils'
 import { RealtimeBridge } from '@/realtime/realtime-bridge'
 
 // Carregado sob demanda para não pesar no bundle inicial.
-const MockPanel = lazy(() => import('@/features/dev-tools/mock-panel'))
+const MockPanel = lazy(() => networkReady.then(() => import('@/features/dev-tools/mock-panel')))
 
 export interface RouterContext {
   queryClient: QueryClient
@@ -50,7 +51,7 @@ function RootLayout() {
       </a>
       <PendingOrderBanner />
       <SiteHeader />
-      <main id="conteudo" tabIndex={-1} className="outline-none">
+      <main id="conteudo" tabIndex={-1} className="min-h-dvh outline-none">
         <Outlet />
       </main>
       <div className={cn(hideMobileChrome && 'hidden md:block')}>

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { env } from './env'
+import { networkReady } from './network-ready'
 import { toApiError } from './api-error'
 import { storage } from './storage'
 
@@ -23,7 +24,8 @@ export function onSessionExpired(listener: SessionExpiredListener) {
   }
 }
 
-http.interceptors.request.use((config) => {
+http.interceptors.request.use(async (config) => {
+  await networkReady
   const session = storage.getSession()
   if (session) config.headers.Authorization = `Bearer ${session.token}`
   const guestCartId = storage.getGuestCartId()

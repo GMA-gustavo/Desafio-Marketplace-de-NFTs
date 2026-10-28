@@ -7,6 +7,7 @@ import {
   type OrderUpdatedEvent,
 } from '@/contracts/realtime'
 import { env } from '@/lib/env'
+import { networkReady } from '@/lib/network-ready'
 
 export type ConnectionStatus = 'idle' | 'connecting' | 'connected' | 'reconnecting' | 'offline'
 
@@ -58,10 +59,12 @@ export class RealtimeClient {
 
     // Carregado sob demanda: o engine.io captura `WebSocket` ao ser avaliado, então precisa
     // vir depois do MSW ativo (mocks) — e ainda sai do bundle inicial.
-    void import('socket.io-client').then(({ io }) => {
-      if (generation !== this.generation) return
-      this.open(io, identity)
-    })
+    void networkReady
+      .then(() => import('socket.io-client'))
+      .then(({ io }) => {
+        if (generation !== this.generation) return
+        this.open(io, identity)
+      })
   }
 
   private open(io: typeof import('socket.io-client').io, identity: Identity) {

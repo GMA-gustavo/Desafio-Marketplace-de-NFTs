@@ -5,12 +5,18 @@ import { RouterProvider } from '@tanstack/react-router'
 import { createQueryClient } from '@/app/query-client'
 import { createAppRouter } from '@/app/router'
 import { env } from '@/lib/env'
+import { markNetworkReady } from '@/lib/network-ready'
 import './index.css'
 
-async function bootstrap() {
+function bootstrap() {
   if (env.enableMocks) {
-    const { startMockWorker } = await import('@/mocks/browser')
-    await startMockWorker()
+    // O app renderiza sem esperar: requisições e socket aguardam o MSW (ver network-ready.ts).
+    import('@/mocks/browser')
+      .then(({ startMockWorker }) => startMockWorker())
+      .catch((error: unknown) => console.error('Falha ao iniciar a API simulada.', error))
+      .finally(markNetworkReady)
+  } else {
+    markNetworkReady()
   }
 
   const queryClient = createQueryClient()
@@ -25,4 +31,4 @@ async function bootstrap() {
   )
 }
 
-void bootstrap()
+bootstrap()
