@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import { createRootRouteWithContext, Link, Outlet } from '@tanstack/react-router'
 import type { QueryClient } from '@tanstack/react-query'
 import { Container } from '@/components/layout/container'
@@ -6,6 +7,10 @@ import { SiteFooter } from '@/components/layout/site-footer'
 import { SiteHeader } from '@/components/layout/site-header'
 import { buttonVariants } from '@/components/ui/button'
 import { Toaster } from '@/components/ui/sonner'
+import { env } from '@/lib/env'
+
+// Carregado sob demanda para não pesar no bundle inicial.
+const MockPanel = lazy(() => import('@/features/dev-tools/mock-panel'))
 
 export interface RouterContext {
   queryClient: QueryClient
@@ -32,6 +37,11 @@ function RootLayout() {
       <SiteFooter />
       <MobileNav />
       <Toaster position="bottom-right" />
+      {env.enableMocks && (
+        <Suspense fallback={null}>
+          <MockPanel />
+        </Suspense>
+      )}
     </>
   )
 }

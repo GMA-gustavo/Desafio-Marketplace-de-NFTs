@@ -1,6 +1,17 @@
-import { http, HttpResponse } from 'msw'
-import { env } from '@/lib/env'
+import { json, route } from '../http'
+import { realtimeHandler } from '../realtime'
+import { accountHandlers } from './account'
+import { authHandlers } from './auth'
+import { cartHandlers } from './cart'
+import { catalogHandlers } from './catalog'
+import { orderHandlers } from './orders'
 
-const api = (path: string) => `${env.apiUrl}${path}`
-
-export const handlers = [http.get(api('/health'), () => HttpResponse.json({ status: 'ok' }))]
+export const handlers = [
+  route('GET', '/health', () => json({ status: 'ok' })),
+  ...authHandlers,
+  ...catalogHandlers,
+  ...cartHandlers,
+  ...orderHandlers,
+  ...accountHandlers,
+  realtimeHandler,
+]
