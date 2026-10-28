@@ -25,7 +25,7 @@ export function Hero() {
   const current = slides[Math.min(index, slides.length - 1)]!
 
   const dots = (
-    <div role="group" aria-label="Destaques" className="flex items-center gap-1.5">
+    <div role="group" aria-label="Destaques" className="-mx-2 flex items-center">
       {(slides.length > 1 ? slides : [FIRST_SLIDE, FIRST_SLIDE, FIRST_SLIDE]).map((slide, i) => (
         <button
           key={`${slide.id}-${i}`}
@@ -34,11 +34,16 @@ export function Hero() {
           disabled={slides.length <= 1}
           aria-label={`Mostrar destaque ${i + 1} de ${Math.max(slides.length, 3)}: ${slide.name}`}
           aria-current={i === index ? 'true' : undefined}
-          className={cn(
-            'size-2 rounded-full bg-primary/50 transition-all hover:bg-primary',
-            i === index && 'w-4 bg-primary',
-          )}
-        />
+          // Área de toque de 24 px em volta do ponto de 8 px.
+          className="group grid h-6 min-w-6 place-items-center"
+        >
+          <span
+            className={cn(
+              'block size-2 rounded-full bg-primary/50 transition-all group-hover:bg-primary',
+              i === index && 'w-4 bg-primary',
+            )}
+          />
+        </button>
       ))}
     </div>
   )

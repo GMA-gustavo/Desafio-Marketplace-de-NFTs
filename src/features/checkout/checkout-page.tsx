@@ -230,6 +230,12 @@ export function CheckoutPage() {
   }
 
   const loadingForm = profile.isPending || wallets.isPending
+  // Revisar só com o formulário montado: antes disso a validação veria os campos vazios.
+  const canReview =
+    !loadingForm &&
+    !isPreparing &&
+    !placeOrder.isPending &&
+    Boolean(quote.data && quote.data.lines.length > 0)
   const field = (name: keyof CheckoutForm) => errors[name]?.message
 
   const formFields = loadingForm ? (
@@ -393,14 +399,7 @@ export function CheckoutPage() {
             <QuoteSummary quote={quote.data} isLoading={quote.isPending} />
           </div>
 
-          <Button
-            type="submit"
-            size="lg"
-            className="hidden w-full lg:flex"
-            disabled={
-              isPreparing || placeOrder.isPending || !quote.data || quote.data.lines.length === 0
-            }
-          >
+          <Button type="submit" size="lg" className="hidden w-full lg:flex" disabled={!canReview}>
             {isPreparing ? 'Atualizando valores…' : 'Revisar e confirmar compra'}
           </Button>
         </aside>
@@ -409,9 +408,7 @@ export function CheckoutPage() {
           type="submit"
           size="lg"
           className="order-3 w-full rounded-full lg:hidden"
-          disabled={
-            isPreparing || placeOrder.isPending || !quote.data || quote.data.lines.length === 0
-          }
+          disabled={!canReview}
         >
           {isPreparing ? 'Atualizando valores…' : 'Revisar e confirmar compra'}
         </Button>
