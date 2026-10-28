@@ -14,6 +14,7 @@ import { SiteHeader } from '@/components/layout/site-header'
 import { buttonVariants } from '@/components/ui/button'
 import { Toaster } from '@/components/ui/sonner'
 import { SessionWatcher } from '@/features/auth/session-watcher'
+import { PendingOrderBanner } from '@/features/orders/pending-order-banner'
 import { env } from '@/lib/env'
 import { cn } from '@/lib/utils'
 import { RealtimeBridge } from '@/realtime/realtime-bridge'
@@ -45,6 +46,7 @@ function RootLayout() {
       >
         Pular para o conteúdo
       </a>
+      <PendingOrderBanner />
       <SiteHeader />
       <main id="conteudo" tabIndex={-1} className="outline-none">
         <Outlet />

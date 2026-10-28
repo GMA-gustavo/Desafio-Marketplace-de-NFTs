@@ -18,7 +18,7 @@ export function SessionWatcher() {
     () =>
       onSessionExpired(() => {
         const hadUser = Boolean(queryClient.getQueryData(queryKeys.session))
-        clearPrivateState(queryClient)
+        clearPrivateState(queryClient, { keepCheckoutContext: true })
         if (!hadUser) return
         toast.warning('Sua sessão expirou. Entre novamente para continuar de onde parou.', {
           id: 'session-expired',

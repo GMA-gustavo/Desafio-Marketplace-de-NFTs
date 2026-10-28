@@ -34,10 +34,21 @@ export function useSession() {
   return { user: query.data ?? null, isPending: query.isPending }
 }
 
-/** Remove tudo que pertence ao usuário (cache, assinatura de eventos, pedido pendente). */
-export function clearPrivateState(queryClient: QueryClient) {
+/**
+ * Remove tudo que pertence ao usuário (cache, assinatura de eventos).
+ * Na expiração da sessão, rascunho/tentativa/pedido pendente ficam guardados — marcados com o
+ * userId, só são retomados pelo mesmo usuário. No logout explícito, tudo é apagado.
+ */
+export function clearPrivateState(
+  queryClient: QueryClient,
+  { keepCheckoutContext = false }: { keepCheckoutContext?: boolean } = {},
+) {
   storage.setSession(null)
-  storage.setPendingOrder(null)
+  if (!keepCheckoutContext) {
+    storage.setPendingOrder(null)
+    storage.setCheckoutDraft(null)
+    storage.setCheckoutAttempt(null)
+  }
   realtimeClient.disconnect()
   queryClient.removeQueries({ queryKey: queryKeys.userAll })
   queryClient.removeQueries({ queryKey: queryKeys.cartAll })
@@ -52,6 +63,19 @@ export async function completeAuthentication(queryClient: QueryClient, response:
   const guestCartId = storage.getGuestCartId()
   const previous = storage.getSession()
   if (previous && previous.userId !== response.user.id) clearPrivateState(queryClient)
+  // Troca de usuário após expiração: o contexto de checkout do usuário anterior é descartado.
+  for (const ref of [
+    storage.getCheckoutDraft(),
+    storage.getCheckoutAttempt(),
+    storage.getPendingOrder(),
+  ]) {
+    if (ref && ref.userId !== response.user.id) {
+      storage.setCheckoutDraft(null)
+      storage.setCheckoutAttempt(null)
+      storage.setPendingOrder(null)
+      break
+    }
+  }
 
   storage.setSession({ ...response.session, userId: response.user.id })
   queryClient.removeQueries({ queryKey: queryKeys.cart(null) })
