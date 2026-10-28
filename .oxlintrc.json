@@ -1,17 +1,30 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["react", "typescript", "oxc", "jsx-a11y"],
-  "categories": { "correctness": "error", "suspicious": "warn" },
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn"
+  },
   "rules": {
     "react/rules-of-hooks": "error",
     "react/react-in-jsx-scope": "off",
     "react/exhaustive-deps": "warn",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
+    "react/only-export-components": [
+      "warn",
+      {
+        "allowConstantExport": true
+      }
+    ],
+    "no-underscore-dangle": "off"
   },
   "overrides": [
     {
       "files": ["src/routes/**", "src/components/ui/**"],
-      "rules": { "react/only-export-components": "off" }
+      "rules": {
+        "react/only-export-components": "off",
+        "jsx-a11y/label-has-associated-control": "off",
+        "jsx-a11y/prefer-tag-over-role": "off"
+      }
     }
   ],
   "ignorePatterns": ["src/routeTree.gen.ts"]

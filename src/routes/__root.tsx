@@ -1,5 +1,11 @@
 import { createRootRouteWithContext, Link, Outlet } from '@tanstack/react-router'
 import type { QueryClient } from '@tanstack/react-query'
+import { Container } from '@/components/layout/container'
+import { MobileNav } from '@/components/layout/mobile-nav'
+import { SiteFooter } from '@/components/layout/site-footer'
+import { SiteHeader } from '@/components/layout/site-header'
+import { buttonVariants } from '@/components/ui/button'
+import { Toaster } from '@/components/ui/sonner'
 
 export interface RouterContext {
   queryClient: QueryClient
@@ -11,18 +17,36 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 })
 
 function RootLayout() {
-  return <Outlet />
+  return (
+    <>
+      <a
+        href="#conteudo"
+        className="sr-only z-50 rounded-sm bg-primary px-4 py-2 font-bold text-ink focus:not-sr-only focus:fixed focus:top-2 focus:left-2"
+      >
+        Pular para o conteúdo
+      </a>
+      <SiteHeader />
+      <main id="conteudo" tabIndex={-1} className="outline-none">
+        <Outlet />
+      </main>
+      <SiteFooter />
+      <MobileNav />
+      <Toaster position="bottom-right" />
+    </>
+  )
 }
 
 function NotFound() {
   return (
-    <main className="grid min-h-dvh place-items-center p-6 text-center">
+    <Container className="grid min-h-[50dvh] place-items-center py-16 text-center">
       <div>
-        <h1 className="text-2xl font-bold">Página não encontrada</h1>
-        <Link to="/" className="mt-4 inline-block text-primary underline">
+        <p className="text-caption font-bold tracking-widest text-primary">ERRO 404</p>
+        <h1 className="mt-2 text-heading font-bold">Página não encontrada</h1>
+        <p className="mt-2 text-text-secondary">O endereço acessado não existe ou foi removido.</p>
+        <Link to="/" className={buttonVariants({ className: 'mt-6' })}>
           Voltar para o início
         </Link>
       </div>
-    </main>
+    </Container>
   )
 }
