@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { PagePlaceholder } from '@/components/feedback/page-placeholder'
+import { ProfilePage } from '@/features/profile/profile-page'
 
 export const Route = createFileRoute('/perfil/')({
-  component: () => <PagePlaceholder title="Perfil do colecionador" />,
+  head: () => ({ meta: [{ title: 'Meu perfil — Kurio' }] }),
+  component: ProfilePage,
 })
