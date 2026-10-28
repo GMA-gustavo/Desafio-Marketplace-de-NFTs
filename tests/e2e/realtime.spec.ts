@@ -49,6 +49,8 @@ test.describe('Tempo real (Socket.IO)', () => {
     await expect(review.locator('dd[aria-live]')).toHaveText('1.006 ETH')
 
     // Preço muda via Socket.IO com a revisão aberta: a cotação antiga não pode ser confirmada.
+    // O goto recarregou a página; o evento só chega depois de o socket reconectar.
+    await expect.poll(() => mocks.socketConnections()).toBeGreaterThan(0)
     await mocks.changePrice('golden-beat-207', '2', '1-50')
     await expect(page.getByText(/O preço de Golden Beat #207 mudou/)).toBeVisible()
     await review.getByRole('button', { name: 'Confirmar compra' }).click()
