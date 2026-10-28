@@ -2,6 +2,9 @@ import { Link, useRouterState } from '@tanstack/react-router'
 import { LogIn, Search, ShoppingCart } from 'lucide-react'
 import { Logo } from '@/components/brand/logo'
 import { buttonVariants } from '@/components/ui/button'
+import { AccountMenu } from '@/features/auth/account-menu'
+import { useSession } from '@/features/auth/session'
+import { useCart } from '@/features/cart/use-cart'
 import { notifyComingSoon } from '@/lib/coming-soon'
 import { cn } from '@/lib/utils'
 import { Container } from './container'
@@ -11,15 +14,11 @@ const navLinkClass =
 
 const MARKET_PATHS = ['/nft', '/carrinho', '/pagamento', '/pedidos']
 
-interface SiteHeaderProps {
-  cartCount?: number
-  /** Slot da direita quando hÃ¡ sessÃ£o (menu do usuÃ¡rio). */
-  account?: React.ReactNode
-}
-
-export function SiteHeader({ cartCount = 0, account }: SiteHeaderProps) {
+export function SiteHeader() {
   const location = useRouterState({ select: (s) => s.location })
-  const redirect = location.href
+  const { user, isPending } = useSession()
+  const cart = useCart()
+  const cartCount = cart.data?.itemCount ?? 0
   const isMarket = MARKET_PATHS.some((p) => location.pathname.startsWith(p))
 
   return (
@@ -87,10 +86,13 @@ export function SiteHeader({ cartCount = 0, account }: SiteHeaderProps) {
                 </span>
               )}
             </Link>
-            {account ?? (
+            {user ? (
+              <AccountMenu user={user} />
+            ) : (
               <Link
                 to="/entrar"
-                search={{ redirect }}
+                search={{ redirect: location.href }}
+                aria-busy={isPending}
                 className={cn(buttonVariants({ size: 'sm' }), 'h-8 gap-1.5 px-2.5')}
               >
                 <LogIn className="size-4" aria-hidden />

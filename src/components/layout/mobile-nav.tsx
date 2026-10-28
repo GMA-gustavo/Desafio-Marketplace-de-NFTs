@@ -1,11 +1,13 @@
 import { Link } from '@tanstack/react-router'
 import { Heart, House, ShoppingCart, User, Wallet } from 'lucide-react'
+import { useCart } from '@/features/cart/use-cart'
 
 const itemClass =
   'relative grid size-11 place-items-center rounded-full text-text-secondary transition-colors hover:text-primary data-[status=active]:text-primary'
 
 /** Barra inferior do mobile (frame Mobile / Início). Some a partir de md. */
-export function MobileNav({ cartCount = 0 }: { cartCount?: number }) {
+export function MobileNav() {
+  const cartCount = useCart().data?.itemCount ?? 0
   return (
     <nav
       aria-label="Navegação inferior"

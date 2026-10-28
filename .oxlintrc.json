@@ -15,7 +15,8 @@
         "allowConstantExport": true
       }
     ],
-    "no-underscore-dangle": "off"
+    "no-underscore-dangle": "off",
+    "jsx-a11y/prefer-tag-over-role": "off"
   },
   "overrides": [
     {

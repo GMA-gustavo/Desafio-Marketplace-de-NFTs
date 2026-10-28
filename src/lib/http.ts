@@ -18,7 +18,9 @@ const sessionExpiredListeners = new Set<SessionExpiredListener>()
 /** A camada de sessão assina para reagir a 401 "session_expired" vindo de qualquer chamada. */
 export function onSessionExpired(listener: SessionExpiredListener) {
   sessionExpiredListeners.add(listener)
-  return () => sessionExpiredListeners.delete(listener)
+  return () => {
+    sessionExpiredListeners.delete(listener)
+  }
 }
 
 http.interceptors.request.use((config) => {
