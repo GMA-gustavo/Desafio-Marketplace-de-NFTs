@@ -60,7 +60,7 @@ export default function MockPanel() {
           <button
             type="button"
             aria-label="Abrir painel de cenários de simulação"
-            className="fixed bottom-20 left-3 z-40 grid size-10 place-items-center rounded-full border border-border-soft bg-surface-raised text-primary shadow-lg hover:bg-surface-dark md:bottom-4"
+            className="fixed top-1/2 left-0 z-40 grid size-9 -translate-y-1/2 place-items-center rounded-r-full border border-l-0 border-border-soft bg-surface-raised text-primary shadow-lg hover:bg-surface-dark md:top-auto md:bottom-4 md:left-3 md:size-10 md:translate-y-0 md:rounded-full md:border-l"
           />
         }
       >

@@ -1,4 +1,4 @@
-import { io, type Socket } from 'socket.io-client'
+import type { Socket } from 'socket.io-client'
 import {
   nftUpdatedEventSchema,
   orderUpdatedEventSchema,
@@ -37,19 +37,34 @@ export class RealtimeClient {
   private statusListeners = new Set<(status: ConnectionStatus) => void>()
   private reconnectListeners = new Set<() => void>()
   private hasConnectedOnce = false
+  /** Invalida conexões em andamento quando a identidade muda antes do módulo carregar. */
+  private generation = 0
+  private active = false
   status: ConnectionStatus = 'idle'
 
   /** Conecta como visitante (identity null) ou como usuário; idempotente por identidade. */
   connect(identity: Identity) {
     const same =
-      this.socket &&
+      this.active &&
       this.identity?.userId === identity?.userId &&
       this.identity?.token === identity?.token
     if (same) return
     this.disconnect()
     this.identity = identity
+    this.active = true
     this.hasConnectedOnce = false
+    this.setStatus('connecting')
+    const generation = ++this.generation
 
+    // Carregado sob demanda: o engine.io captura `WebSocket` ao ser avaliado, então precisa
+    // vir depois do MSW ativo (mocks) — e ainda sai do bundle inicial.
+    void import('socket.io-client').then(({ io }) => {
+      if (generation !== this.generation) return
+      this.open(io, identity)
+    })
+  }
+
+  private open(io: typeof import('socket.io-client').io, identity: Identity) {
     const socket = io(env.socketUrl, {
       transports: ['websocket'],
       auth: identity ? { token: identity.token } : {},
@@ -57,7 +72,6 @@ export class RealtimeClient {
       reconnectionDelayMax: 4000,
     })
     this.socket = socket
-    this.setStatus('connecting')
 
     socket.on('connect', () => {
       this.setStatus('connected')
@@ -83,6 +97,8 @@ export class RealtimeClient {
 
   /** Encerra a conexão e esquece o histórico (nova sessão começa limpa). */
   disconnect() {
+    this.generation += 1
+    this.active = false
     if (this.socket) {
       this.socket.removeAllListeners()
       this.socket.io.removeAllListeners()

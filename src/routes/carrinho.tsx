@@ -1,6 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { PagePlaceholder } from '@/components/feedback/page-placeholder'
+import { CartPage } from '@/features/cart/cart-page'
 
 export const Route = createFileRoute('/carrinho')({
-  component: () => <PagePlaceholder title="Carrinho de NFTs" />,
+  staticData: { hideMobileChrome: true },
+  head: () => ({ meta: [{ title: 'Carrinho — Kurio' }] }),
+  component: CartPage,
 })
