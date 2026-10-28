@@ -35,7 +35,9 @@ const PING_INTERVAL_MS = 20_000
 export const realtimeHandler = realtime.addEventListener('connection', (connection) => {
   const { client } = connection
   if (scenario.config.offline) {
-    client.close(1011, 'offline')
+    // Fecha logo após abrir (como uma queda real). Fechar dentro do handler, antes da abertura,
+    // deixa o socket.io-client preso em "conectando" sem agendar novas tentativas.
+    setTimeout(() => client.close(1011, 'offline'), 50)
     return
   }
 

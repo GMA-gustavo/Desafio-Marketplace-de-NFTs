@@ -245,9 +245,7 @@ export function CartPage() {
         className="hidden md:block"
         items={[{ label: 'Início', to: '/' }, { label: 'Mercado', to: '/' }, { label: 'Carrinho' }]}
       />
-      <h1 className="sr-only md:not-sr-only md:mt-4 md:text-heading-sm md:font-bold">
-        Carrinho de NFTs
-      </h1>
+      <h1 className="hidden md:mt-4 md:block md:text-heading-sm md:font-bold">Carrinho de NFTs</h1>
 
       {changed.length > 0 && (
         <div

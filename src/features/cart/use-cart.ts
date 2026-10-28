@@ -10,7 +10,11 @@ export function cartQueryOptions(userId: string | null) {
     queryFn: async ({ signal }) => {
       const cart = await cartApi.get(signal)
       // O servidor cria/identifica o carrinho do visitante; guardamos o id para sobreviver ao refresh.
-      if (!userId && storage.getGuestCartId() !== cart.id) storage.setGuestCartId(cart.id)
+      // Só grava se ainda for visitante: uma busca que termina depois do login não pode
+      // ressuscitar o carrinho de visitante já mesclado.
+      if (!userId && !storage.getSession() && storage.getGuestCartId() !== cart.id) {
+        storage.setGuestCartId(cart.id)
+      }
       return cart
     },
     staleTime: 15_000,

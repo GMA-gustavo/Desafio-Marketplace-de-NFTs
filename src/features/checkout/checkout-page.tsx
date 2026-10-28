@@ -72,7 +72,10 @@ export function CheckoutPage() {
 
   const form = useForm<CheckoutForm>({
     resolver: zodResolver(checkoutFormSchema),
-    mode: 'onTouched',
+    // Valida no envio (e depois a cada digitação): erros no blur deslocam o botão e fazem o toque
+    // no mobile cair fora dele.
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
     defaultValues: { ...EMPTY, ...(draft?.values as Partial<CheckoutForm> | undefined) },
   })
   const { errors } = form.formState
@@ -323,7 +326,7 @@ export function CheckoutPage() {
           { label: 'Pagamento' },
         ]}
       />
-      <h1 className="sr-only">Pagamento</h1>
+      <h1 className="hidden md:sr-only md:block">Pagamento</h1>
 
       <form
         noValidate

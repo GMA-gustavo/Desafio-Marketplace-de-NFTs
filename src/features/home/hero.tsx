@@ -88,9 +88,7 @@ export function Hero() {
           <div className="relative grid grid-cols-[1fr_auto] gap-3">
             <div>
               <p className="text-caption font-bold">Bem-vindo à Kurio</p>
-              <p className="mt-1 text-title font-bold uppercase" aria-hidden>
-                Seja dono da cultura digital
-              </p>
+              <h1 className="mt-1 text-title font-bold uppercase">Seja dono da cultura digital</h1>
               <p className="mt-1 text-caption text-text-secondary">
                 Descubra NFTs selecionados de criadores do mundo todo.
               </p>

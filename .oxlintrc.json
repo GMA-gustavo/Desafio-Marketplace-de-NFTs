@@ -27,7 +27,14 @@
         "jsx-a11y/label-has-associated-control": "off",
         "jsx-a11y/prefer-tag-over-role": "off"
       }
+    },
+    {
+      "files": ["tests/**"],
+      "rules": {
+        "react/rules-of-hooks": "off",
+        "no-shadow": "off"
+      }
     }
   ],
-  "ignorePatterns": ["src/routeTree.gen.ts"]
+  "ignorePatterns": ["src/routeTree.gen.ts", "playwright-report", "test-results"]
 }

@@ -70,6 +70,8 @@ export class RealtimeClient {
       auth: identity ? { token: identity.token } : {},
       reconnectionDelay: 500,
       reconnectionDelayMax: 4000,
+      // Tentativa que não abre em 5 s é descartada e a reconexão continua.
+      timeout: 5000,
     })
     this.socket = socket
 

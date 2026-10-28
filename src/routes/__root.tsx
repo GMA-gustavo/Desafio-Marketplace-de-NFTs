@@ -16,6 +16,7 @@ import { Toaster } from '@/components/ui/sonner'
 import { SessionWatcher } from '@/features/auth/session-watcher'
 import { PendingOrderBanner } from '@/features/orders/pending-order-banner'
 import { env } from '@/lib/env'
+import { DESKTOP_QUERY, useMediaQuery } from '@/lib/use-media-query'
 import { cn } from '@/lib/utils'
 import { RealtimeBridge } from '@/realtime/realtime-bridge'
 
@@ -33,6 +34,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 })
 
 function RootLayout() {
+  const isDesktop = useMediaQuery(DESKTOP_QUERY)
   const hideMobileChrome = useMatches({
     select: (matches) => matches.some((m) => m.staticData?.hideMobileChrome),
   })
@@ -55,7 +57,8 @@ function RootLayout() {
         <SiteFooter />
       </div>
       {!hideMobileChrome && <MobileNav />}
-      <Toaster position="bottom-right" />
+      {/* No mobile os toasts ficam no topo, abaixo da barra superior, sem cobrir as ações fixas. */}
+      <Toaster position={isDesktop ? 'bottom-right' : 'top-center'} mobileOffset={{ top: 64 }} />
       <SessionWatcher />
       <RealtimeBridge />
       {env.enableMocks && (

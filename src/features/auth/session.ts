@@ -77,10 +77,10 @@ export async function completeAuthentication(queryClient: QueryClient, response:
     }
   }
 
+  // O token vai para o storage primeiro (o merge precisa dele), mas a UI só passa a enxergar o
+  // usuário depois do merge: senão a busca do carrinho da conta, disparada pela troca de sessão,
+  // pode terminar depois e sobrescrever o carrinho mesclado com o anterior.
   storage.setSession({ ...response.session, userId: response.user.id })
-  queryClient.removeQueries({ queryKey: queryKeys.cart(null) })
-  queryClient.setQueryData(queryKeys.session, response.user)
-
   if (guestCartId) {
     try {
       const cart = await cartApi.merge(guestCartId)
@@ -88,8 +88,11 @@ export async function completeAuthentication(queryClient: QueryClient, response:
     } catch {
       // O carrinho da conta continua válido; os itens do visitante seguem no servidor.
     }
-    storage.setGuestCartId(null)
   }
+  // Sempre limpa: uma busca de visitante pode ter gravado um id entre a leitura acima e a sessão.
+  storage.setGuestCartId(null)
+  queryClient.removeQueries({ queryKey: queryKeys.cart(null) })
+  queryClient.setQueryData(queryKeys.session, response.user)
 }
 
 export async function logout(queryClient: QueryClient) {
