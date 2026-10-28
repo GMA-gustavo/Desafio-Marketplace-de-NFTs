@@ -32,3 +32,6 @@ blob-report
 # Local
 .claude
 ROTEIRO.md
+
+# Cache do gerador de rotas do TanStack
+.tanstack
