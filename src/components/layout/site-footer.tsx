@@ -146,7 +146,12 @@ export function SiteFooter() {
               <ul className="mt-3 space-y-2">
                 {COLLECTIONS.map((c) => (
                   <li key={c.slug}>
-                    <Link to="/" hash="catalogo" className={linkClass}>
+                    <Link
+                      to="/"
+                      hash="catalogo"
+                      search={{ categories: [c.slug] }}
+                      className={linkClass}
+                    >
                       {c.label}
                     </Link>
                   </li>

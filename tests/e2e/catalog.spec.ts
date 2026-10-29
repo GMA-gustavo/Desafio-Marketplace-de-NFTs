@@ -92,6 +92,16 @@ test.describe('Catálogo', () => {
     await expect(resultCount(page)).toHaveText('48 NFTs encontrados')
   })
 
+  test('coleções do rodapé abrem o catálogo filtrado', async ({ page }) => {
+    await open(page, '/')
+    await page
+      .getByRole('navigation', { name: 'Coleções' })
+      .getByRole('link', { name: 'Fotografia' })
+      .click()
+    await expect(page).toHaveURL(/categories=fotografia/)
+    await expect(resultCount(page)).not.toHaveText('48 NFTs encontrados')
+  })
+
   test('respostas fora de ordem não sobrescrevem a busca mais recente', async ({
     page,
     mocks,

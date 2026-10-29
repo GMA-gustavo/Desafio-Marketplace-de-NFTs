@@ -6,6 +6,7 @@ import { UserAvatar } from '@/components/user/user-avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -29,10 +30,13 @@ export function AccountMenu({ user }: { user: UserDto }) {
         <ChevronDown className="size-4" aria-hidden />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-52">
-        <DropdownMenuLabel>
-          <span className="block font-bold text-foreground">{user.displayName}</span>
-          <span className="block text-caption text-text-secondary">{user.email}</span>
-        </DropdownMenuLabel>
+        {/* GroupLabel do Base UI só existe dentro de um Menu.Group (erro #31 fora dele). */}
+        <DropdownMenuGroup>
+          <DropdownMenuLabel>
+            <span className="block font-bold text-foreground">{user.displayName}</span>
+            <span className="block text-caption text-text-secondary">{user.email}</span>
+          </DropdownMenuLabel>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem render={<Link to="/perfil" />}>
           <User aria-hidden /> Meu perfil

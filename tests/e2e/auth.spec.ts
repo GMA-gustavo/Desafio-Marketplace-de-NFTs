@@ -99,7 +99,14 @@ test.describe('Conta e sessão', () => {
     await expect(page.getByRole('heading', { name: 'Lista de interesse' })).toBeVisible()
     await expect(page.getByText('Sage Nomad #009')).toBeVisible()
 
-    await page.getByRole('button', { name: 'Sair' }).click()
+    if (isMobile) {
+      await page.getByRole('button', { name: 'Sair' }).click()
+    } else {
+      // No desktop o logout sai do menu da conta no header.
+      await page.getByRole('button', { name: `Conta de ${USERS.ana.name}` }).click()
+      await expect(page.getByRole('menu').getByText(USERS.ana.email)).toBeVisible()
+      await page.getByRole('menuitem', { name: 'Sair' }).click()
+    }
     await expect(page).toHaveURL(/\/$/)
     expect(await page.evaluate(() => localStorage.getItem('kurio.session'))).toBeNull()
     if (!isMobile) await expect(page.getByRole('link', { name: 'Entrar' })).toBeVisible()
