@@ -14,12 +14,19 @@ const commaList = <T extends z.ZodType>(item: T) =>
     z.array(item),
   )
 
+/**
+ * O parser de URL do router converte "6.19" (mas não "2.30") em número; aqui volta a ser texto,
+ * senão o zod rejeitaria o valor e o filtro sumiria em silêncio.
+ */
+const asText = <T extends z.ZodType>(schema: T) =>
+  z.preprocess((value) => (typeof value === 'number' ? String(value) : value), schema)
+
 export const catalogSearchSchema = z.object({
-  q: z.string().trim().max(60).optional().catch(undefined),
+  q: asText(z.string().trim().max(60)).optional().catch(undefined),
   categories: commaList(z.string()).optional().catch(undefined),
   networks: commaList(networkSchema).optional().catch(undefined),
-  minPrice: ethAmount.optional().catch(undefined),
-  maxPrice: ethAmount.optional().catch(undefined),
+  minPrice: asText(ethAmount).optional().catch(undefined),
+  maxPrice: asText(ethAmount).optional().catch(undefined),
   tab: catalogTabSchema.optional().catch(undefined),
   sort: catalogSortSchema.optional().catch(undefined),
   page: z.coerce.number().int().min(1).optional().catch(undefined),

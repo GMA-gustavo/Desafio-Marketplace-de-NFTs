@@ -92,6 +92,15 @@ test.describe('Catálogo', () => {
     await expect(resultCount(page)).toHaveText('48 NFTs encontrados')
   })
 
+  test('faixa de preço sobrevive a valores que a URL lê como número', async ({ page }) => {
+    // "6.19" é convertido em número pelo parser de URL; "2.30" continua texto. Ambos filtram.
+    await open(page, '/?maxPrice=6.19')
+    await expect(resultCount(page)).toHaveText('37 NFTs encontrados')
+    await expect(page).toHaveURL(/maxPrice=6\.19/)
+    await open(page, '/?maxPrice=2.30')
+    await expect(resultCount(page)).toHaveText('24 NFTs encontrados')
+  })
+
   test('coleções do rodapé abrem o catálogo filtrado', async ({ page }) => {
     await open(page, '/')
     await page
