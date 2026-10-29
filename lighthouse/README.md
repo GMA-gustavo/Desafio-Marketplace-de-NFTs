@@ -44,5 +44,6 @@ Metas: Performance ≥ 90 · Acessibilidade ≥ 95 · Boas práticas ≥ 95 · S
 O `vite preview` serve em HTTP/1.1 e sem compressão. Nesse cenário o Lighthouse simula no máximo 6 conexões
 por origem, e cada chunk do code splitting paga round-trips de 150 ms que não existem na Vercel, que serve em
 HTTP/2 com brotli. O script sobe um servidor que reproduz o deploy: HTTP/2 (TLS autoassinado), arquivos
-pré-comprimidos, os mesmos cabeçalhos de cache do `vercel.json` e fallback SPA. Para auditar o deploy real:
-`node scripts/lighthouse.mjs --url https://<deploy>`.
+pré-comprimidos, os mesmos cabeçalhos de cache do `vercel.json` e fallback SPA. A auditoria do deploy publicado
+está em [deploy/](deploy/README.md) e é refeita com
+`node scripts/lighthouse.mjs --url https://<deploy> --out lighthouse/deploy`.

@@ -4,7 +4,7 @@ Solução do [desafio frontend da Jungle Gaming](https://github.com/junglegaming
 [layout no Figma](https://www.figma.com/design/Ff0SksUi7UFtPWUO8kyNtw/Frontend-Challenge). Ela cobre descoberta, compra e conta
 do colecionador, em desktop e mobile, com um backend inteiro simulado na camada de rede (MSW + Socket.IO).
 
-- **Aplicação publicada:** _(adicionar a URL da Vercel)_
+- **Aplicação publicada:** <https://kurio-marketplace-omega.vercel.app>
 - **Arquitetura, contratos e decisões:** [ARCHITECTURE.md](ARCHITECTURE.md)
 - **Auditoria Lighthouse:** [lighthouse/README.md](lighthouse/README.md)
 
@@ -194,13 +194,17 @@ Os relatórios HTML/JSON, as versões das ferramentas e o ambiente ficam em [lig
 | Detalhe | Desktop     | 100         | 100            | 100           | 100 | 0,52 s |
 
 Por padrão a auditoria roda contra o build local, servido por um servidor que reproduz a Vercel (HTTP/2, brotli e os
-mesmos cabeçalhos de cache); a justificativa está no README da pasta. Para auditar o deploy:
+mesmos cabeçalhos de cache); a justificativa está no README da pasta.
+
+O deploy publicado também foi auditado, com resultados em [lighthouse/deploy/](lighthouse/deploy/README.md). Os números
+ficam próximos dos locais: Início mobile 94 (LCP 2,82 s), Detalhe mobile 96 (LCP 2,73 s) e 100 no desktop, com 100 em
+acessibilidade, boas práticas e SEO em todas as linhas. Para refazer:
 
 ```bash
-node scripts/lighthouse.mjs --url https://<deploy>
+node scripts/lighthouse.mjs --url https://kurio-marketplace-omega.vercel.app --out lighthouse/deploy
 ```
 
-`--runs <n>` muda o número de execuções.
+`--runs <n>` muda o número de execuções e `--out <pasta>` muda onde os resultados são gravados.
 
 ## Deploy
 

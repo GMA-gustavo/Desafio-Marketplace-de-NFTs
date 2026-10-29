@@ -4,11 +4,12 @@
  *   pnpm lighthouse                       # build + auditoria local (servidor que imita a Vercel)
  *   pnpm lighthouse --url https://...     # audita um deploy
  *   pnpm lighthouse --runs 5              # outra quantidade de execuções
+ *   pnpm lighthouse --out lighthouse/deploy  # grava os resultados em outra pasta
  *
  * Páginas: início e detalhe do NFT × mobile e desktop × N execuções (3 por padrão).
  * Cada execução usa um Chrome com perfil limpo (primeira visita: sem cache nem service worker).
  * Guarda a mediana de cada categoria e de cada métrica, e os relatórios HTML/JSON da execução
- * mediana em lighthouse/. Sai com código 1 se alguma mediana ficar abaixo da meta.
+ * mediana em lighthouse/ (ou em --out). Sai com código 1 se alguma mediana ficar abaixo da meta.
  */
 import {
   createReadStream,
@@ -33,14 +34,18 @@ import selfsigned from 'selfsigned'
 
 const ROOT = path.resolve(import.meta.dirname, '..')
 const DIST = path.join(ROOT, 'dist')
-const OUT = path.join(ROOT, 'lighthouse')
-
 const { values: args } = parseArgs({
   options: {
     url: { type: 'string' },
     runs: { type: 'string', default: '3' },
+    out: { type: 'string', default: 'lighthouse' },
   },
 })
+const OUT = path.resolve(ROOT, args.out)
+/** Comando que reproduz esta auditoria (citado no README gerado). */
+const COMMAND = args.url
+  ? `node scripts/lighthouse.mjs --url ${args.url} --out ${args.out}`
+  : 'pnpm lighthouse'
 const RUNS = Number(args.runs)
 
 const PAGES = [
@@ -183,7 +188,7 @@ function markdown(summary) {
   const lines = [
     '# Resultados do Lighthouse',
     '',
-    `Gerado por \`pnpm lighthouse\` em ${summary.generatedAt}. Mediana de ${summary.runs} execuções por linha.`,
+    `Gerado por \`${COMMAND}\` em ${summary.generatedAt}. Mediana de ${summary.runs} execuções por linha.`,
     '',
     `Metas: Performance ≥ ${TARGETS.performance} · Acessibilidade ≥ ${TARGETS.accessibility} · Boas práticas ≥ ${TARGETS['best-practices']} · SEO ≥ ${TARGETS.seo}.`,
     '',
@@ -234,13 +239,17 @@ function markdown(summary) {
     '- Cada execução abre um Chrome com perfil limpo: o service worker do MSW é registrado do zero, como numa primeira visita.',
     '- Com os mocks ligados (como no deploy), a API simulada responde com a latência do cenário padrão (120–450 ms).',
     '',
+  )
+  if (args.url) return lines.join('\n')
+  lines.push(
     '## Por que um servidor próprio',
     '',
     'O `vite preview` serve em HTTP/1.1 e sem compressão. Nesse cenário o Lighthouse simula no máximo 6 conexões',
     'por origem, e cada chunk do code splitting paga round-trips de 150 ms que não existem na Vercel, que serve em',
     'HTTP/2 com brotli. O script sobe um servidor que reproduz o deploy: HTTP/2 (TLS autoassinado), arquivos',
-    'pré-comprimidos, os mesmos cabeçalhos de cache do `vercel.json` e fallback SPA. Para auditar o deploy real:',
-    '`node scripts/lighthouse.mjs --url https://<deploy>`.',
+    'pré-comprimidos, os mesmos cabeçalhos de cache do `vercel.json` e fallback SPA. A auditoria do deploy publicado',
+    'está em [deploy/](deploy/README.md) e é refeita com',
+    '`node scripts/lighthouse.mjs --url https://<deploy> --out lighthouse/deploy`.',
     '',
   )
   return lines.join('\n')

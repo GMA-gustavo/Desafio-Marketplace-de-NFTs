@@ -341,7 +341,8 @@ declarada em [src/lib/utils.ts](src/lib/utils.ts).
 
 ## 12. Performance
 
-Os resultados e o método estão em [lighthouse/README.md](lighthouse/README.md). O que pesou:
+Os resultados e o método estão em [lighthouse/README.md](lighthouse/README.md), e a auditoria do deploy publicado em
+[lighthouse/deploy/](lighthouse/deploy/README.md). O que pesou:
 
 - O app renderiza sem esperar o MSW, e o chunk dos mocks recebe `modulepreload` para baixar em paralelo com o bundle
   principal (plugin `preloadMocks` em [vite.config.ts](vite.config.ts)).

@@ -1,0 +1,287 @@
+{
+  "generatedAt": "2026-10-29T14:24:14.176Z",
+  "runs": 3,
+  "targets": {
+    "performance": 90,
+    "accessibility": 95,
+    "best-practices": 95,
+    "seo": 90
+  },
+  "environment": {
+    "target": "https://kurio-marketplace-omega.vercel.app",
+    "lighthouse": "13.6.0",
+    "browser": "HeadlessChrome/156.0.8078.4",
+    "node": "v24.11.1",
+    "os": "Windows_NT 10.0.26300 (x64)",
+    "cpu": "AMD Ryzen 7 5700X3D 8-Core Processor",
+    "cores": 16,
+    "memoryGb": 16,
+    "benchmarkIndex": 2983
+  },
+  "results": [
+    {
+      "page": "Início",
+      "path": "/",
+      "formFactor": "Mobile",
+      "report": "inicio-mobile",
+      "scores": {
+        "performance": 94,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "largest-contentful-paint": 2816.363,
+        "cumulative-layout-shift": 0.01944106925880923,
+        "total-blocking-time": 128.5,
+        "first-contentful-paint": 925.856,
+        "speed-index": 1820.7985215250314
+      },
+      "runs": [
+        {
+          "scores": {
+            "performance": 94,
+            "accessibility": 100,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "largest-contentful-paint": 2837.8559999999998,
+            "cumulative-layout-shift": 0.01963620906101374,
+            "total-blocking-time": 158,
+            "first-contentful-paint": 925.856,
+            "speed-index": 1820.7985215250314
+          }
+        },
+        {
+          "scores": {
+            "performance": 94,
+            "accessibility": 100,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "largest-contentful-paint": 2792.049,
+            "cumulative-layout-shift": 0.0001951398022045101,
+            "total-blocking-time": 128.5,
+            "first-contentful-paint": 935.049,
+            "speed-index": 2213.4985688765887
+          }
+        },
+        {
+          "scores": {
+            "performance": 95,
+            "accessibility": 100,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "largest-contentful-paint": 2816.363,
+            "cumulative-layout-shift": 0.01944106925880923,
+            "total-blocking-time": 109,
+            "first-contentful-paint": 920.8629999999999,
+            "speed-index": 1795.7898751553807
+          }
+        }
+      ]
+    },
+    {
+      "page": "Início",
+      "path": "/",
+      "formFactor": "Desktop",
+      "report": "inicio-desktop",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "largest-contentful-paint": 600.206,
+        "cumulative-layout-shift": 0.01086933426728541,
+        "total-blocking-time": 0,
+        "first-contentful-paint": 274.206,
+        "speed-index": 549.1762327795823
+      },
+      "runs": [
+        {
+          "scores": {
+            "performance": 100,
+            "accessibility": 100,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "largest-contentful-paint": 578.706,
+            "cumulative-layout-shift": 0.01086933426728541,
+            "total-blocking-time": 0,
+            "first-contentful-paint": 251.70600000000002,
+            "speed-index": 530.9563427436888
+          }
+        },
+        {
+          "scores": {
+            "performance": 100,
+            "accessibility": 100,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "largest-contentful-paint": 604.77,
+            "cumulative-layout-shift": 0.01086933426728541,
+            "total-blocking-time": 0,
+            "first-contentful-paint": 276.77,
+            "speed-index": 549.1762327795823
+          }
+        },
+        {
+          "scores": {
+            "performance": 100,
+            "accessibility": 100,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "largest-contentful-paint": 600.206,
+            "cumulative-layout-shift": 0.01086933426728541,
+            "total-blocking-time": 0,
+            "first-contentful-paint": 274.206,
+            "speed-index": 602.9453578564322
+          }
+        }
+      ]
+    },
+    {
+      "page": "Detalhe do NFT",
+      "path": "/nft/emerald-ape-042",
+      "formFactor": "Mobile",
+      "report": "detalhe-mobile",
+      "scores": {
+        "performance": 96,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "largest-contentful-paint": 2727.206,
+        "cumulative-layout-shift": 0,
+        "total-blocking-time": 74,
+        "first-contentful-paint": 927.206,
+        "speed-index": 1298.6214389274487
+      },
+      "runs": [
+        {
+          "scores": {
+            "performance": 96,
+            "accessibility": 100,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "largest-contentful-paint": 2726.141,
+            "cumulative-layout-shift": 0,
+            "total-blocking-time": 68,
+            "first-contentful-paint": 926.141,
+            "speed-index": 1197.0718499642849
+          }
+        },
+        {
+          "scores": {
+            "performance": 96,
+            "accessibility": 100,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "largest-contentful-paint": 2727.206,
+            "cumulative-layout-shift": 0,
+            "total-blocking-time": 78,
+            "first-contentful-paint": 927.206,
+            "speed-index": 1484.1506060096265
+          }
+        },
+        {
+          "scores": {
+            "performance": 96,
+            "accessibility": 100,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "largest-contentful-paint": 2752.2084999999997,
+            "cumulative-layout-shift": 0,
+            "total-blocking-time": 74,
+            "first-contentful-paint": 952.2085,
+            "speed-index": 1298.6214389274487
+          }
+        }
+      ]
+    },
+    {
+      "page": "Detalhe do NFT",
+      "path": "/nft/emerald-ape-042",
+      "formFactor": "Desktop",
+      "report": "detalhe-desktop",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "largest-contentful-paint": 579.435,
+        "cumulative-layout-shift": 0.00333083267664828,
+        "total-blocking-time": 0,
+        "first-contentful-paint": 263.435,
+        "speed-index": 451.0428109208435
+      },
+      "runs": [
+        {
+          "scores": {
+            "performance": 100,
+            "accessibility": 100,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "largest-contentful-paint": 581.236,
+            "cumulative-layout-shift": 0.00333083267664828,
+            "total-blocking-time": 0,
+            "first-contentful-paint": 266.236,
+            "speed-index": 451.0428109208435
+          }
+        },
+        {
+          "scores": {
+            "performance": 100,
+            "accessibility": 100,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "largest-contentful-paint": 575.2280000000001,
+            "cumulative-layout-shift": 0.00333083267664828,
+            "total-blocking-time": 0,
+            "first-contentful-paint": 255.228,
+            "speed-index": 394.7935380300498
+          }
+        },
+        {
+          "scores": {
+            "performance": 100,
+            "accessibility": 100,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "largest-contentful-paint": 579.435,
+            "cumulative-layout-shift": 0.00333083267664828,
+            "total-blocking-time": 0,
+            "first-contentful-paint": 263.435,
+            "speed-index": 480.26221528872065
+          }
+        }
+      ]
+    }
+  ]
+}
