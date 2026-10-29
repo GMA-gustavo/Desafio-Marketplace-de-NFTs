@@ -188,10 +188,10 @@ Os relatórios HTML/JSON, as versões das ferramentas e o ambiente ficam em [lig
 
 | Página  | Dispositivo | Performance | Acessibilidade | Boas práticas | SEO | LCP    |
 | ------- | ----------- | ----------- | -------------- | ------------- | --- | ------ |
-| Início  | Mobile      | 95          | 100            | 100           | 100 | 2,56 s |
+| Início  | Mobile      | 94          | 100            | 100           | 100 | 2,59 s |
 | Início  | Desktop     | 100         | 100            | 100           | 100 | 0,54 s |
-| Detalhe | Mobile      | 97          | 100            | 100           | 100 | 2,41 s |
-| Detalhe | Desktop     | 100         | 100            | 100           | 100 | 0,52 s |
+| Detalhe | Mobile      | 96          | 100            | 100           | 100 | 2,52 s |
+| Detalhe | Desktop     | 100         | 100            | 100           | 100 | 0,53 s |
 
 Por padrão a auditoria roda contra o build local, servido por um servidor que reproduz a Vercel (HTTP/2, brotli e os
 mesmos cabeçalhos de cache); a justificativa está no README da pasta.
