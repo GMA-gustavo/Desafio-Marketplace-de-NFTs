@@ -11,7 +11,7 @@ export interface Crumb {
 /** Trilha "Início / Mercado / …" dos frames desktop. */
 export function Breadcrumb({ items, className }: { items: Crumb[]; className?: string }) {
   return (
-    <nav aria-label="Você está em" className={cn('text-body-lg font-bold', className)}>
+    <nav aria-label="Você está em" className={cn('text-[15px] leading-4 font-bold', className)}>
       <ol className="flex flex-wrap items-center gap-1">
         {items.map((item, i) => (
           <Fragment key={item.label}>
@@ -21,7 +21,7 @@ export function Breadcrumb({ items, className }: { items: Crumb[]; className?: s
               </li>
             )}
             <li>
-              {item.to && i < items.length - 1 ? (
+              {item.to ? (
                 <Link to={item.to} className="hover:text-primary">
                   {item.label}
                 </Link>
@@ -56,12 +56,12 @@ export function MobileTopBar({
         type="button"
         onClick={() => (canGoBack ? router.history.back() : void router.navigate({ to: fallback }))}
         aria-label="Voltar"
-        className="grid size-9 place-items-center rounded-full bg-surface-raised text-primary"
+        className="grid size-[35px] place-items-center rounded-full border border-border bg-surface-raised text-text-secondary"
       >
         <ChevronLeft className="size-5" aria-hidden />
       </button>
       {title && <h1 className="flex-1 text-center text-title font-bold">{title}</h1>}
-      <div className="grid min-w-9 place-items-center">{action}</div>
+      <div className="grid min-w-[35px] place-items-center">{action}</div>
     </div>
   )
 }

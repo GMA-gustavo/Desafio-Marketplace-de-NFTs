@@ -9,7 +9,7 @@ function pageList(current: number, total: number): (number | 'gap')[] {
 }
 
 const itemClass =
-  'grid size-7 place-items-center rounded-sm border border-border text-body transition-colors hover:border-primary hover:text-primary disabled:pointer-events-none disabled:opacity-40'
+  'grid size-[35px] place-items-center rounded-sm border border-border text-[18px] leading-4 transition-colors hover:border-primary hover:text-primary'
 
 export function Pagination({
   page,
@@ -24,17 +24,19 @@ export function Pagination({
   return (
     <nav aria-label="Paginação do catálogo" className="flex justify-end">
       <ul className="flex items-center gap-2">
-        <li>
-          <button
-            type="button"
-            className={itemClass}
-            onClick={() => onChange(page - 1)}
-            disabled={page <= 1}
-            aria-label="Página anterior"
-          >
-            <ChevronLeft className="size-4" aria-hidden />
-          </button>
-        </li>
+        {/* Como no Figma, as setas só aparecem quando há para onde ir. */}
+        {page > 1 && (
+          <li>
+            <button
+              type="button"
+              className={itemClass}
+              onClick={() => onChange(page - 1)}
+              aria-label="Página anterior"
+            >
+              <ChevronLeft className="size-[18px]" aria-hidden />
+            </button>
+          </li>
+        )}
         {pageList(page, totalPages).map((p, i) =>
           p === 'gap' ? (
             <li key={`gap-${i}`} aria-hidden className="px-1 text-text-secondary">
@@ -57,17 +59,18 @@ export function Pagination({
             </li>
           ),
         )}
-        <li>
-          <button
-            type="button"
-            className={itemClass}
-            onClick={() => onChange(page + 1)}
-            disabled={page >= totalPages}
-            aria-label="Próxima página"
-          >
-            <ChevronRight className="size-4" aria-hidden />
-          </button>
-        </li>
+        {page < totalPages && (
+          <li>
+            <button
+              type="button"
+              className={itemClass}
+              onClick={() => onChange(page + 1)}
+              aria-label="Próxima página"
+            >
+              <ChevronRight className="size-[18px]" aria-hidden />
+            </button>
+          </li>
+        )}
       </ul>
     </nav>
   )

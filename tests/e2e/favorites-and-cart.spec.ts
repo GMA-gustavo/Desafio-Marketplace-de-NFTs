@@ -49,12 +49,21 @@ test.describe('Carrinho', () => {
     isMobile,
   }) => {
     await open(page, '/nft/violet-nomad-314')
-    await page.getByRole('button', { name: 'Adicionar ao carrinho' }).click()
-    await expect(page.getByText('Violet Nomad #314 adicionado ao carrinho.')).toBeVisible()
+    if (isMobile) {
+      await page.getByRole('button', { name: 'Adicionar ao carrinho' }).click()
+      await expect(page.getByText('Violet Nomad #314 adicionado ao carrinho.')).toBeVisible()
+    } else {
+      // No frame desktop só há COMPRAR: a quantidade sai do seletor.
+      await page.getByRole('button', { name: 'Aumentar quantidade de Violet Nomad #314' }).click()
+    }
     await page
       .getByRole('button', { name: isMobile ? 'Comprar NFT' : 'Comprar', exact: true })
       .click()
     await expect(page).toHaveURL(/\/carrinho$/)
+    // A URL muda antes de a página do carrinho substituir a do NFT, que tem um seletor igual.
+    await expect(
+      page.getByRole('button', { name: 'Conectar e finalizar' }).filter({ visible: true }),
+    ).toBeVisible()
 
     const increase = page.getByRole('button', { name: 'Aumentar quantidade de Violet Nomad #314' })
     const quantity = page

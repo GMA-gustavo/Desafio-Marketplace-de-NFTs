@@ -58,7 +58,7 @@ export function WalletPicker({
           <div
             key={wallet.id}
             className={cn(
-              'rounded-xl border bg-surface-card p-3 transition-colors',
+              'rounded-xl border bg-surface-card p-3 transition-colors md:rounded-[3px] md:bg-transparent',
               selected ? 'border-primary' : 'border-border',
             )}
           >

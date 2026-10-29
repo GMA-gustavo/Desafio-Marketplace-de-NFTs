@@ -17,8 +17,11 @@ import { logout } from '@/features/auth/session'
 import { notifyComingSoon } from '@/lib/coming-soon'
 import { cn } from '@/lib/utils'
 
+// Account Sidebar do Figma: itens de 45 px, texto de 15 px em Text/Accent e barra de 6 px no ativo.
 const itemClass =
-  'flex shrink-0 items-center gap-2.5 border-l-4 border-transparent px-3 py-2.5 text-body-lg whitespace-nowrap text-primary transition-colors hover:bg-surface-raised aria-[current=page]:border-primary aria-[current=page]:bg-surface-raised md:px-2'
+  'flex shrink-0 items-center gap-2.5 border-l-4 border-transparent px-3 py-2.5 text-body-lg whitespace-nowrap text-primary transition-colors hover:bg-surface-raised aria-[current=page]:border-primary aria-[current=page]:bg-surface-raised md:h-[45px] md:gap-3 md:border-l-[6px] md:px-4 md:py-0 md:text-[15px] md:text-text-accent md:aria-[current=page]:bg-transparent'
+
+const iconClass = 'size-[18px] md:text-text-muted'
 
 const LINKS = [
   { to: '/perfil', label: 'Dados do perfil', Icon: User },
@@ -47,14 +50,14 @@ export function ProfileShell({ children }: { children: React.ReactNode }) {
   }, [pathname])
 
   return (
-    <Container className="pt-4 pb-24 md:pt-6 md:pb-12">
-      <div className="grid gap-6 md:grid-cols-[253px_1fr] md:gap-6">
+    <Container className="pt-4 pb-24 md:pt-8 md:pb-12">
+      <div className="grid gap-6 md:grid-cols-[253px_1fr] lg:grid-cols-[310px_1fr] lg:gap-7">
         <nav
           ref={navRef}
           aria-label="Meu perfil"
-          className="min-w-0 md:self-start md:bg-surface-card"
+          className="min-w-0 md:self-start md:bg-surface-card md:py-2"
         >
-          <h2 className="hidden px-2 pt-4 pb-2 text-title font-bold md:block">Meu perfil</h2>
+          <h2 className="hidden p-2.5 text-[18px] leading-4 font-bold md:block">Meu perfil</h2>
           <ul className="-mx-4 flex overflow-x-auto px-4 md:mx-0 md:block md:overflow-visible md:px-0">
             {LINKS.map(({ to, label, Icon }) => (
               <li key={to}>
@@ -64,13 +67,13 @@ export function ProfileShell({ children }: { children: React.ReactNode }) {
                   activeProps={{ 'aria-current': 'page' }}
                   className={itemClass}
                 >
-                  <Icon className="size-4" aria-hidden /> {label}
+                  <Icon className={iconClass} aria-hidden /> {label}
                 </Link>
               </li>
             ))}
             <li>
               <Link to="/favoritos" activeProps={{ 'aria-current': 'page' }} className={itemClass}>
-                <Heart className="size-4" aria-hidden /> Lista de interesse
+                <Heart className={iconClass} aria-hidden /> Lista de interesse
               </Link>
             </li>
             {SOON.map(({ label, Icon }) => (
@@ -80,21 +83,21 @@ export function ProfileShell({ children }: { children: React.ReactNode }) {
                   onClick={() => notifyComingSoon(label)}
                   className={cn(itemClass, 'w-full')}
                 >
-                  <Icon className="size-4" aria-hidden /> {label}
+                  <Icon className={iconClass} aria-hidden /> {label}
                 </button>
               </li>
             ))}
-            <li className="md:border-t md:border-border">
+            <li className="md:border-t md:border-primary/30">
               <button
                 type="button"
-                className={cn(itemClass, 'w-full font-bold')}
+                className={cn(itemClass, 'w-full font-bold md:h-10 md:gap-2')}
                 onClick={async () => {
                   await logout(queryClient)
                   toast.success('Você saiu da sua conta.')
                   await router.navigate({ to: '/' })
                 }}
               >
-                <LogOut className="size-4" aria-hidden /> Sair
+                <LogOut className="size-4 md:size-5" aria-hidden /> Sair
               </button>
             </li>
           </ul>

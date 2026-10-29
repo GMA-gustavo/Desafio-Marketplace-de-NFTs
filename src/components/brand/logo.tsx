@@ -5,7 +5,7 @@ export function Logo({ className }: { className?: string }) {
   return (
     <Link
       to="/"
-      className={cn('text-body font-bold tracking-[0.12em] text-foreground', className)}
+      className={cn('text-body font-bold tracking-[0.1em] text-foreground', className)}
       aria-label="Kurio — página inicial"
     >
       KURIO

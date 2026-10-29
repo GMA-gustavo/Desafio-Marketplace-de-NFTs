@@ -52,28 +52,34 @@ const POSTS = [
 
 export function Promos() {
   return (
-    <section aria-label="Coleções em destaque" className="grid gap-6 md:grid-cols-2">
+    // Dois cards de 586 × 250 com 28 px entre eles, como no Figma.
+    <section aria-label="Coleções em destaque" className="grid gap-6 md:grid-cols-2 lg:gap-7">
       {PROMOS.map((promo) => (
         <article
           key={promo.title}
-          className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] overflow-hidden rounded-sm bg-surface-card"
+          className="flex min-h-[250px] overflow-hidden rounded-lg bg-surface-card lg:h-[250px]"
         >
-          <NftImage
-            art={promo.art}
-            alt=""
-            sizes="(min-width: 768px) 235px, 50vw"
-            className="h-full rounded-r-2xl"
-          />
-          <div className="flex flex-col items-end justify-center gap-3 p-4 text-right">
-            <h2 className="text-body-lg font-bold">{promo.title}</h2>
-            <p className="text-caption text-text-secondary">{promo.text}</p>
+          <div className="w-1/2 shrink-0 lg:-ml-[5px] lg:w-[292px]">
+            <NftImage
+              art={promo.art}
+              alt=""
+              sizes="(min-width: 1024px) 292px, (min-width: 768px) 25vw, 50vw"
+              className="aspect-auto h-full rounded-[18px]"
+            />
+          </div>
+          <div className="flex min-w-0 flex-1 flex-col items-end p-4 text-right lg:pt-[37px] lg:pr-[30px] lg:pb-[46px] lg:pl-2">
+            <h2 className="max-w-[260px] text-[18px] leading-6 font-bold">{promo.title}</h2>
+            <p className="mt-[9px] max-w-[263px] text-body text-text-secondary">{promo.text}</p>
             <Link
               to="/"
               hash="catalogo"
               search={promo.search}
-              className={buttonVariants({ size: 'sm', className: 'h-8' })}
+              className={buttonVariants({
+                className:
+                  'mt-[25px] h-10 w-[140px] justify-between rounded-md px-[27px] leading-5 font-medium lg:mt-auto',
+              })}
             >
-              Explorar <ArrowRight className="size-4" aria-hidden />
+              Explorar <ArrowRight className="size-[18px]" aria-hidden />
             </Link>
           </div>
         </article>
@@ -86,36 +92,40 @@ export function Blog() {
   return (
     <section aria-labelledby="blog-title">
       <div className="text-center">
-        <h2 id="blog-title" className="text-heading font-bold">
+        <h2 id="blog-title" className="text-heading leading-[37px] font-bold">
           Diário da Cunhagem
         </h2>
-        <p className="mt-2 text-body text-text-secondary">
+        <p className="mt-3 text-body leading-[18px] text-text-secondary">
           Histórias, guias e insights para colecionadores sobre o universo da propriedade digital.
         </p>
       </div>
-      <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Quatro cards de 268 px com 24 px entre eles, alinhados à esquerda como no Figma. */}
+      <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-[repeat(4,268px)] lg:gap-6">
         {POSTS.map((post) => (
           <li key={post.title}>
-            <article className="h-full overflow-hidden rounded-sm bg-surface-card">
+            <article className="h-full overflow-hidden rounded-lg bg-surface-card">
               <NftImage
                 art={post.art}
                 alt=""
-                sizes="(min-width: 1024px) 220px, 50vw"
-                className="aspect-[219/160]"
+                sizes="(min-width: 1024px) 268px, 50vw"
+                className="aspect-[268/195]"
               />
-              <div className="space-y-2 p-3">
-                <p className="text-caption text-text-secondary">
+              <div className="space-y-2 px-4 pt-3 pb-4">
+                <p className="text-caption leading-4 font-medium text-text-secondary">
                   {post.date} | Leitura de {post.minutes} min
                 </p>
-                <h3 className="text-body-lg font-bold">{post.title}</h3>
-                <p className="text-caption text-text-secondary">{post.text}</p>
+                <h3 className="text-body-lg leading-[21px] font-bold">{post.title}</h3>
+                <p className="text-caption leading-4 font-medium text-text-secondary">
+                  {post.text}
+                </p>
                 <button
                   type="button"
                   onClick={() => notifyComingSoon('O Diário da Cunhagem')}
-                  className="text-caption font-bold text-primary hover:underline"
+                  className="flex items-center gap-1 text-caption leading-[14px] text-text-accent hover:underline"
                   aria-label={`Ler mais: ${post.title}`}
                 >
-                  Ler mais →
+                  <span className="font-bold">Ler mais</span>
+                  <span aria-hidden>→</span>
                 </button>
               </div>
             </article>

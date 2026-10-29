@@ -22,6 +22,7 @@ import type { User } from '@/contracts/auth'
 import { useSession } from '@/features/auth/session'
 import { errorMessage, toApiError } from '@/lib/api-error'
 import { applyApiErrors } from '@/lib/form-errors'
+import { cn } from '@/lib/utils'
 import { useProfile } from './use-profile'
 
 /** Senha é opcional no mesmo formulário: só é validada se algum dos três campos for preenchido. */
@@ -96,21 +97,22 @@ function AvatarEditor({ profile }: { profile: Profile }) {
 
   return (
     <div>
-      <p id={`${id}-label`} className="text-body">
+      <p id={`${id}-label`} className="text-[15px] leading-[15px]">
         Avatar
       </p>
-      <div className="mt-2 flex items-center gap-4">
-        <span className="grid size-11 place-items-center overflow-hidden rounded-full bg-surface-raised text-primary">
+      {/* Avatar Controls do Figma: círculo de 50 px, 24 px até "Alterar" (98 × 40) e 20 px até "Remover". */}
+      <div className="mt-2.5 flex items-center gap-6">
+        <span className="grid size-[50px] place-items-center overflow-hidden rounded-full border border-border bg-surface-raised text-primary">
           {profile.avatarUrl ? (
             <img
               src={profile.avatarUrl}
               alt="Seu avatar atual"
-              width={44}
-              height={44}
+              width={50}
+              height={50}
               className="size-full object-cover"
             />
           ) : (
-            <ImageIcon className="size-5" aria-label="Sem avatar" />
+            <ImageIcon className="size-6" aria-label="Sem avatar" />
           )}
         </span>
         <input
@@ -133,30 +135,43 @@ function AvatarEditor({ profile }: { profile: Profile }) {
             upload.mutate(await readAsDataUrl(file))
           }}
         />
-        <Button type="button" size="sm" disabled={busy} onClick={() => inputRef.current?.click()}>
-          {upload.isPending ? 'Enviando…' : 'Alterar'}
-        </Button>
-        <button
-          type="button"
-          disabled={busy || !profile.avatarUrl}
-          onClick={() => remove.mutate()}
-          className="text-body hover:text-primary disabled:opacity-50"
-        >
-          Remover
-        </button>
+        <div className="flex items-center gap-5">
+          <Button
+            type="button"
+            disabled={busy}
+            onClick={() => inputRef.current?.click()}
+            className="h-10 w-[98px] rounded-[3px] leading-4"
+          >
+            {upload.isPending ? 'Enviando…' : 'Alterar'}
+          </Button>
+          <button
+            type="button"
+            disabled={busy || !profile.avatarUrl}
+            onClick={() => remove.mutate()}
+            className="text-body leading-4 hover:text-primary disabled:opacity-50"
+          >
+            Remover
+          </button>
+        </div>
+        {/* Dica ao lado dos botões, para a linha manter os 50 px do Figma. */}
+        {error ? (
+          <p id={`${id}-error`} role="alert" className="text-caption text-destructive">
+            {error}
+          </p>
+        ) : (
+          <p id={`${id}-hint`} className="max-w-[150px] text-caption text-text-secondary">
+            PNG, JPG ou WebP com até 512 KB.
+          </p>
+        )}
       </div>
-      {error ? (
-        <p id={`${id}-error`} role="alert" className="mt-2 text-caption text-destructive">
-          {error}
-        </p>
-      ) : (
-        <p id={`${id}-hint`} className="mt-2 text-caption text-text-secondary">
-          PNG, JPG ou WebP com até 512 KB.
-        </p>
-      )}
     </div>
   )
 }
+
+// Campos do Figma (Profile Form): rótulo de 29 px, 10 px até o input de 40 px e raio de 3 px.
+const field = 'gap-2.5'
+const passwordField = 'md:max-w-[417px] [&>label]:min-h-[15px] gap-3'
+const input = 'h-10 rounded-[3px] px-4'
 
 function ProfileForm({ profile }: { profile: Profile }) {
   const sync = useSyncProfile()
@@ -208,45 +223,73 @@ function ProfileForm({ profile }: { profile: Profile }) {
   const err = (name: keyof ProfileForm) => errors[name]?.message
 
   return (
-    <form noValidate onSubmit={onSubmit} className="space-y-6">
+    <form noValidate onSubmit={onSubmit} className="space-y-8">
       <FormAlert message={formError} />
-      <div className="grid gap-x-6 gap-y-5 md:grid-cols-2">
-        <FormField label="Nome de exibição" required error={err('displayName')}>
-          {(c) => <Input {...c} {...form.register('displayName')} autoComplete="name" />}
+      {/* Fields do Figma: colunas de 417 px com 28 px entre elas e 24 px entre as linhas. */}
+      <div className="grid gap-x-7 gap-y-6 md:grid-cols-2">
+        <FormField label="Nome de exibição" required error={err('displayName')} className={field}>
+          {(c) => (
+            <Input {...c} {...form.register('displayName')} autoComplete="name" className={input} />
+          )}
         </FormField>
-        <FormField label="Nome de usuário" required error={err('username')}>
-          {(c) => <Input {...c} {...form.register('username')} autoComplete="username" />}
+        <FormField label="Nome de usuário" required error={err('username')} className={field}>
+          {(c) => (
+            <Input
+              {...c}
+              {...form.register('username')}
+              autoComplete="username"
+              className={input}
+            />
+          )}
         </FormField>
-        <FormField label="E-mail" required error={err('email')}>
-          {(c) => <Input {...c} {...form.register('email')} type="email" autoComplete="email" />}
+        <FormField label="E-mail" required error={err('email')} className={field}>
+          {(c) => (
+            <Input
+              {...c}
+              {...form.register('email')}
+              type="email"
+              autoComplete="email"
+              className={input}
+            />
+          )}
         </FormField>
-        <FormField label="Nome ENS" required error={err('ensName')} hint="Sem o sufixo .eth">
+        <FormField label="Nome ENS" required error={err('ensName')} className={field}>
           {(c) => (
             <div className="flex items-center">
-              <Input {...c} {...form.register('ensName')} className="rounded-r-none" />
-              <span className="grid h-10 place-items-center rounded-r-sm border border-l-0 border-border px-3 text-body text-text-secondary">
+              <Input {...c} {...form.register('ensName')} className={cn(input, 'rounded-r-none')} />
+              <span className="grid h-10 place-items-center rounded-r-[3px] border border-l-0 border-border px-3 text-[15px] text-foreground">
                 .eth
               </span>
             </div>
           )}
         </FormField>
-        <FormField label="Apelido da carteira" required error={err('walletNickname')}>
-          {(c) => <Input {...c} {...form.register('walletNickname')} />}
+        <FormField
+          label="Apelido da carteira"
+          required
+          error={err('walletNickname')}
+          className={field}
+        >
+          {(c) => <Input {...c} {...form.register('walletNickname')} className={input} />}
         </FormField>
         <AvatarEditor profile={profile} />
       </div>
 
-      <fieldset className="max-w-md space-y-4">
-        <legend className="text-body-lg font-bold">Alterar senha</legend>
-        <p className="text-caption text-text-secondary">
-          Preencha apenas se quiser trocar a senha. As outras sessões serão encerradas.
-        </p>
-        <FormField label="Senha atual" error={err('currentPassword')}>
+      <fieldset className="space-y-6">
+        <legend className="text-body-lg leading-4 font-medium">
+          Alterar senha
+          {/* O frame não tem texto de apoio aqui: a explicação fica para leitores de tela. */}
+          <span className="sr-only">
+            {' '}
+            (opcional: preencha apenas se quiser trocar a senha; as outras sessões serão encerradas)
+          </span>
+        </legend>
+        <FormField label="Senha atual" error={err('currentPassword')} className={passwordField}>
           {(c) => (
             <PasswordInput
               {...c}
               {...form.register('currentPassword')}
               autoComplete="current-password"
+              className={input}
             />
           )}
         </FormField>
@@ -254,23 +297,39 @@ function ProfileForm({ profile }: { profile: Profile }) {
           label="Nova senha"
           error={err('newPassword')}
           hint="Mínimo de 8 caracteres, com letras e números."
+          hideHint
+          className={passwordField}
         >
           {(c) => (
-            <PasswordInput {...c} {...form.register('newPassword')} autoComplete="new-password" />
+            <PasswordInput
+              {...c}
+              {...form.register('newPassword')}
+              autoComplete="new-password"
+              className={input}
+            />
           )}
         </FormField>
-        <FormField label="Confirmar nova senha" error={err('confirmPassword')}>
+        <FormField
+          label="Confirmar nova senha"
+          error={err('confirmPassword')}
+          className={passwordField}
+        >
           {(c) => (
             <PasswordInput
               {...c}
               {...form.register('confirmPassword')}
               autoComplete="new-password"
+              className={input}
             />
           )}
         </FormField>
       </fieldset>
 
-      <Button type="submit" disabled={isSubmitting} className="min-w-27">
+      <Button
+        type="submit"
+        disabled={isSubmitting}
+        className="h-10 w-[131px] rounded-[3px] leading-4"
+      >
         {isSubmitting ? 'Salvando…' : 'Salvar'}
       </Button>
     </form>
@@ -280,8 +339,8 @@ function ProfileForm({ profile }: { profile: Profile }) {
 export function ProfilePage() {
   const profile = useProfile()
   return (
-    <section aria-labelledby="perfil-title" className="space-y-5">
-      <h1 id="perfil-title" className="text-title font-bold">
+    <section aria-labelledby="perfil-title" className="space-y-8">
+      <h1 id="perfil-title" className="text-body-lg leading-4 font-bold">
         Perfil do colecionador
       </h1>
       {profile.isPending ? (

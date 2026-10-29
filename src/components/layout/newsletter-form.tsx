@@ -9,7 +9,7 @@ export function NewsletterForm() {
   return (
     <form
       noValidate
-      className="mt-3"
+      className="mt-4"
       onSubmit={(event) => {
         event.preventDefault()
         const input = event.currentTarget.elements.namedItem('email') as HTMLInputElement
@@ -22,7 +22,7 @@ export function NewsletterForm() {
         notifyComingSoon('A newsletter')
       }}
     >
-      <div className="flex">
+      <div className="flex h-10 rounded-md bg-surface-dark shadow-[0_0_20px_rgba(10,6,4,0.45)]">
         <label htmlFor={`${id}-email`} className="sr-only">
           E-mail para receber novidades
         </label>
@@ -34,11 +34,11 @@ export function NewsletterForm() {
           placeholder="digite seu e-mail..."
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? `${id}-error` : `${id}-hint`}
-          className="h-8 min-w-0 flex-1 rounded-l-sm bg-surface-raised px-2.5 text-body placeholder:text-text-secondary focus-visible:outline-2"
+          className="min-w-0 flex-1 rounded-l-md bg-transparent pl-3 text-body leading-4 placeholder:text-text-muted focus-visible:outline-2"
         />
         <button
           type="submit"
-          className="h-8 rounded-r-sm bg-primary px-3 text-body-lg font-bold text-ink hover:bg-primary-light"
+          className="w-[85px] rounded-r-md bg-primary pr-1 pl-4 text-left text-[18px] leading-4 font-bold text-ink hover:bg-primary-light"
         >
           Enviar
         </button>
@@ -48,7 +48,7 @@ export function NewsletterForm() {
           {error}
         </p>
       ) : (
-        <p id={`${id}-hint`} className="mt-3 text-caption text-text-secondary">
+        <p id={`${id}-hint`} className="mt-3 text-[13px] leading-[22px] text-text-secondary">
           Receba lançamentos selecionados, histórias de criadores e novidades do mercado.
         </p>
       )}

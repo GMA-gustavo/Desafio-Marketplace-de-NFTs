@@ -65,10 +65,7 @@ test.describe('Tempo real (Socket.IO)', () => {
     await expect.poll(() => mocks.socketConnections()).toBeGreaterThan(0)
 
     await mocks.changePrice('sage-nomad-009', '2', '1-50')
-    const price = page
-      .locator('p.text-title.text-primary, p.text-title.font-bold.text-primary')
-      .filter({ visible: true })
-      .first()
+    const price = page.getByTestId('nft-price').filter({ visible: true }).first()
     await expect(price).toContainText('3.38 ETH')
 
     // Reenvio do mesmo evento (mesmo eventId) e um evento com versão antiga e preço diferente.

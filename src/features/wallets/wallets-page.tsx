@@ -21,6 +21,7 @@ import {
 import { useProfile } from '@/features/profile/use-profile'
 import { errorMessage } from '@/lib/api-error'
 import { applyApiErrors } from '@/lib/form-errors'
+import { cn } from '@/lib/utils'
 import { useSaveWallet, useWallets } from './use-wallets'
 
 const FIELDS = [
@@ -36,7 +37,9 @@ const FIELDS = [
   'ensName',
 ] as const
 
-const selectClass = 'h-10 w-full rounded-sm border border-border bg-ink px-3 text-body'
+// Campos do Figma (Wallets Form): 40 px, raio de 3 px e placeholder em Color/Secondary.
+const selectClass = 'h-10 w-full rounded-[3px] border border-border bg-ink px-3 text-body'
+const inputClass = 'h-10 rounded-[3px] placeholder:text-text-muted'
 
 function toInput(wallet: Wallet): UpsertWalletInput {
   return {
@@ -75,7 +78,7 @@ function WalletForm({
   return (
     <form
       noValidate
-      className="space-y-5"
+      className="space-y-8"
       onSubmit={form.handleSubmit((input) => {
         setFormError(null)
         save.mutate(
@@ -93,12 +96,12 @@ function WalletForm({
       })}
     >
       <FormAlert message={formError} />
-      <div className="grid gap-x-6 gap-y-5 md:grid-cols-2">
+      <div className="grid gap-x-7 gap-y-6 md:grid-cols-2">
         <FormField label="Nome de exibição" required error={err('displayName')}>
-          {(c) => <Input {...c} {...form.register('displayName')} />}
+          {(c) => <Input {...c} {...form.register('displayName')} className={inputClass} />}
         </FormField>
         <FormField label="Apelido da carteira" required error={err('nickname')}>
-          {(c) => <Input {...c} {...form.register('nickname')} />}
+          {(c) => <Input {...c} {...form.register('nickname')} className={inputClass} />}
         </FormField>
         <FormField label="Rede" required error={err('network')}>
           {(c) => (
@@ -112,7 +115,7 @@ function WalletForm({
           )}
         </FormField>
         <FormField label="Nome do perfil" required error={err('profileName')}>
-          {(c) => <Input {...c} {...form.register('profileName')} />}
+          {(c) => <Input {...c} {...form.register('profileName')} className={inputClass} />}
         </FormField>
         <FormField label="Endereço da carteira" required error={err('address')}>
           {(c) => (
@@ -121,16 +124,24 @@ function WalletForm({
               {...form.register('address')}
               placeholder="Endereço 0x da carteira"
               spellCheck={false}
+              className={inputClass}
             />
           )}
         </FormField>
-        <FormField label="ENS ou carteira secundária (opcional)" error={err('secondaryAddress')}>
+        {/* Sem rótulo visível no Figma: só o placeholder, alinhado ao endereço. */}
+        <FormField
+          label="ENS ou carteira secundária (opcional)"
+          hideLabel
+          error={err('secondaryAddress')}
+          className="md:pt-[29px]"
+        >
           {(c) => (
             <Input
               {...c}
               {...form.register('secondaryAddress')}
-              placeholder="nome.eth ou 0x…"
+              placeholder="ENS ou carteira secundária (opcional)"
               spellCheck={false}
+              className={inputClass}
             />
           )}
         </FormField>
@@ -146,23 +157,39 @@ function WalletForm({
           )}
         </FormField>
         <FormField label="Código de indicação" required error={err('referralCode')}>
-          {(c) => <Input {...c} {...form.register('referralCode')} />}
+          {(c) => <Input {...c} {...form.register('referralCode')} className={inputClass} />}
         </FormField>
         <FormField label="E-mail" required error={err('email')}>
-          {(c) => <Input {...c} {...form.register('email')} type="email" autoComplete="email" />}
+          {(c) => (
+            <Input
+              {...c}
+              {...form.register('email')}
+              type="email"
+              autoComplete="email"
+              className={inputClass}
+            />
+          )}
         </FormField>
-        <FormField label="Nome ENS" required error={err('ensName')} hint="Sem o sufixo .eth">
+        <FormField label="Nome ENS" required error={err('ensName')}>
           {(c) => (
             <div className="flex items-center">
-              <Input {...c} {...form.register('ensName')} className="rounded-r-none" />
-              <span className="grid h-10 place-items-center rounded-r-sm border border-l-0 border-border px-3 text-body text-text-secondary">
+              <Input
+                {...c}
+                {...form.register('ensName')}
+                className={cn(inputClass, 'rounded-r-none')}
+              />
+              <span className="grid h-10 place-items-center rounded-r-[3px] border border-l-0 border-border px-3 text-[15px] text-foreground">
                 .eth
               </span>
             </div>
           )}
         </FormField>
       </div>
-      <Button type="submit" disabled={save.isPending}>
+      <Button
+        type="submit"
+        disabled={save.isPending}
+        className="h-10 w-[131px] rounded-[3px] leading-4"
+      >
         {save.isPending ? 'Salvando…' : 'Salvar carteira'}
       </Button>
     </form>
@@ -222,13 +249,13 @@ export function WalletsPage() {
       : { ...blank, nickname: 'Reserva' }
 
   return (
-    <div className="space-y-12">
-      <section aria-labelledby="principal-title" className="space-y-4">
+    <div className="space-y-8">
+      <section aria-labelledby="principal-title" className="space-y-8">
         <div>
-          <h1 id="principal-title" className="text-title font-bold">
+          <h1 id="principal-title" className="text-[17px] leading-4 font-bold">
             Carteira principal
           </h1>
-          <p className="text-caption text-text-secondary">
+          <p className="mt-2 text-body leading-[15px] text-text-secondary">
             Estas carteiras ficam disponíveis no pagamento e para receber NFTs comprados.
           </p>
         </div>
@@ -239,39 +266,39 @@ export function WalletsPage() {
         />
       </section>
 
-      <section aria-labelledby="secundaria-title" className="space-y-4">
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div>
-            <h2 id="secundaria-title" className="text-title font-bold">
+      <section aria-labelledby="secundaria-title" className="space-y-8">
+        <div>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h2 id="secundaria-title" className="text-[17px] leading-4 font-bold">
               Carteira secundária
             </h2>
             {!secondary && !addingSecondary && (
-              <p className="text-caption text-text-secondary">
-                Você ainda não adicionou uma carteira secundária.
-              </p>
+              <div className="flex items-center gap-8">
+                <label className="flex items-center gap-2 text-body leading-4">
+                  <input
+                    type="checkbox"
+                    checked={sameAsPrimary}
+                    disabled={!primary}
+                    onChange={(e) => setSameAsPrimary(e.target.checked)}
+                    className="size-4 accent-primary"
+                  />
+                  Igual à carteira principal
+                </label>
+                <Button
+                  type="button"
+                  variant="link"
+                  className="h-auto px-0 text-body-lg leading-4 font-medium text-text-accent"
+                  onClick={() => setAddingSecondary(true)}
+                >
+                  Adicionar
+                </Button>
+              </div>
             )}
           </div>
           {!secondary && !addingSecondary && (
-            <div className="flex items-center gap-4">
-              <label className="flex items-center gap-2 text-body">
-                <input
-                  type="checkbox"
-                  checked={sameAsPrimary}
-                  disabled={!primary}
-                  onChange={(e) => setSameAsPrimary(e.target.checked)}
-                  className="size-4 accent-primary"
-                />
-                Igual à carteira principal
-              </label>
-              <Button
-                type="button"
-                variant="link"
-                className="px-0 text-body-lg"
-                onClick={() => setAddingSecondary(true)}
-              >
-                Adicionar
-              </Button>
-            </div>
+            <p className="mt-3 text-body leading-[15px] text-text-secondary">
+              Você ainda não adicionou uma carteira secundária.
+            </p>
           )}
         </div>
         {(secondary || addingSecondary) && (

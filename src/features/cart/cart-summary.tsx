@@ -12,11 +12,15 @@ export function QuoteSummary({
   quote,
   isLoading,
   className,
+  variant = 'cart',
 }: {
   quote: Quote | undefined
   isLoading: boolean
   className?: string
+  /** No Pagamento do Figma a "Taxa estimada" é centrada e uma linha separa o total. */
+  variant?: 'cart' | 'checkout'
 }) {
+  const checkout = variant === 'checkout'
   if (isLoading || !quote) {
     return (
       <div className={cn('space-y-3', className)} aria-busy="true">
@@ -39,27 +43,48 @@ export function QuoteSummary({
 
   const hasDiscount = !eth.isZero(quote.discount)
   return (
-    <dl className={cn('space-y-2 text-body', className)}>
-      <div className="flex justify-between gap-3">
+    // Fees do Figma: rótulos de 15 px, valores de 18 px e "Taxa estimada" sob a taxa de rede.
+    <dl className={cn('space-y-3 text-[15px] leading-5', className)}>
+      <div className="flex items-center justify-between gap-3">
         <dt>Subtotal</dt>
-        <dd className="whitespace-nowrap tabular-nums">{formatEth(quote.subtotal)}</dd>
+        <dd className="text-body-lg leading-4 whitespace-nowrap tabular-nums md:text-[18px]">
+          {formatEth(quote.subtotal)}
+        </dd>
       </div>
-      <div className="flex justify-between gap-3">
+      <div className="flex items-center justify-between gap-3">
         <dt>Desconto do lançamento</dt>
         <dd className={cn('whitespace-nowrap tabular-nums', hasDiscount && 'text-success')}>
           (-) {formatEth(quote.discount)}
         </dd>
       </div>
-      <div className="flex justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-x-3">
         <dt>Taxa de rede</dt>
-        <dd className="text-right whitespace-nowrap tabular-nums">
+        <dd className="text-right text-body-lg leading-4 whitespace-nowrap tabular-nums md:text-[18px]">
           {formatEth(quote.networkFee)}
-          <span className="block text-tiny text-primary">Taxa estimada</span>
+          <span className="block text-tiny text-primary md:hidden">Taxa estimada</span>
+        </dd>
+        <dd
+          className={cn(
+            'hidden w-full pt-3 text-caption leading-4 text-text-accent md:block',
+            checkout ? 'text-center' : 'text-right',
+          )}
+        >
+          Taxa estimada
         </dd>
       </div>
-      <div className="flex justify-between gap-3 border-t border-border pt-4 font-bold">
+      <div
+        className={cn(
+          'flex justify-between gap-3 border-t border-border pt-4 font-bold md:leading-4',
+          checkout
+            ? 'md:border-primary/30 md:px-[42px] md:pt-3 md:text-body-lg'
+            : 'md:!mt-6 md:border-0 md:pt-0 md:text-[18px]',
+        )}
+      >
         <dt>Total</dt>
-        <dd className="text-title whitespace-nowrap text-primary tabular-nums" aria-live="polite">
+        <dd
+          className="text-title whitespace-nowrap text-primary tabular-nums md:text-[18px] md:leading-4 md:text-text-accent"
+          aria-live="polite"
+        >
           {formatEth(quote.total)}
         </dd>
       </div>
@@ -122,15 +147,20 @@ export function CouponForm({
         if (!code.trim()) return
         apply.mutate(code.trim(), { onSuccess: () => setCode('') })
       }}
-      className="space-y-1.5"
+      className="space-y-2"
     >
-      <label htmlFor={id} className={cn('text-body font-bold', variant === 'mobile' && 'sr-only')}>
+      <label
+        htmlFor={id}
+        className={cn('block text-body leading-4 font-bold', variant === 'mobile' && 'sr-only')}
+      >
         Código promocional
       </label>
       <div
         className={cn(
           'flex',
-          variant === 'mobile' && 'rounded-full border border-border-soft bg-surface-raised p-1',
+          variant === 'mobile'
+            ? 'h-[50px] rounded-[40px] border border-border bg-surface-card pl-4 shadow-[0_6px_20px_rgba(10,6,4,0.45)]'
+            : 'h-10 rounded-[3px] border border-primary',
         )}
       >
         <input
@@ -145,16 +175,20 @@ export function CouponForm({
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? `${id}-error` : undefined}
           className={cn(
-            'h-8 min-w-0 flex-1 bg-transparent px-2 text-caption placeholder:text-text-secondary',
-            variant === 'desktop' && 'rounded-l-sm border border-r-0 border-border-soft',
+            'min-w-0 flex-1 bg-transparent px-2 text-caption placeholder:text-text-secondary',
+            variant === 'desktop'
+              ? 'leading-4 placeholder:text-text-muted'
+              : 'px-0 text-[13px] leading-[22px] placeholder:text-text-muted',
           )}
         />
         <button
           type="submit"
           disabled={apply.isPending || !code.trim()}
           className={cn(
-            'h-8 bg-primary px-4 text-body font-bold text-ink hover:bg-primary-light disabled:opacity-60',
-            variant === 'desktop' ? 'rounded-r-sm' : 'rounded-full',
+            'bg-primary px-4 font-bold text-ink hover:bg-primary-light disabled:opacity-60',
+            variant === 'desktop'
+              ? '-my-px -mr-px w-[102px] rounded-r-[3px] text-[15px] leading-4'
+              : '-my-px -mr-px w-[97px] rounded-[40px] bg-gradient-to-r from-primary/55 to-primary text-[15px] leading-4',
           )}
         >
           {apply.isPending ? 'Aplicando…' : 'Aplicar'}

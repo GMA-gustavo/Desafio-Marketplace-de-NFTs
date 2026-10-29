@@ -377,22 +377,36 @@ a simulação do Lighthouse limita 6 conexões por origem e cobra round-trips po
 
 ## 14. Desvios do Figma
 
-| Onde                                      | No Figma                                                                      | Na implementação                                                                          |
-| ----------------------------------------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| Badge do carrinho                         | Mostra "6" com 17 itens no carrinho                                           | Soma das quantidades (`itemCount` da API)                                                 |
-| Carrinho mobile                           | Subtotal 8.92 com itens que somam 8.14                                        | Valores sempre da cotação da API                                                          |
-| IDs de token                              | Mudam entre telas (Violet Nomad #0009 e #0314, Ivory Baron #0552 e #0088)     | Um ID por NFT, igual em todas as telas                                                    |
-| Grid da Home                              | Um card sem nome nem preço, e imagens desalinhadas                            | Todos os cards completos e alinhados                                                      |
-| Detalhe mobile                            | Edições duplicadas ("1/10 1/10")                                              | Cada edição aparece uma vez                                                               |
-| Carrinho mobile                           | Lixeira sobreposta ao botão "+"                                               | Lixeira e seletor de quantidade separados                                                 |
-| Perfil e Carteiras                        | Item ativo da navegação principal é "Início"                                  | Nenhum item da navegação principal fica ativo; o ativo é o da barra lateral do perfil     |
-| Busca no desktop                          | O frame desktop não tem campo de busca no catálogo                            | Busca abaixo das abas do catálogo; a lupa do header leva até ela                          |
-| Hero                                      | Texto diferente no desktop ("…arte digital") e no mobile ("…cultura digital") | Mantido como no Figma                                                                     |
-| Carrinho                                  | "Resumo da carteira"                                                          | "Resumo do pedido", que descreve o bloco                                                  |
-| Pagamento                                 | Botão "Confirmar compra" direto                                               | "Revisar e confirmar compra" e, na revisão, "Confirmar compra"                            |
-| Cor de erro e texto de botão              | Vermelho `#ED1B2E`                                                            | Coral `#F0805F` e texto escuro nos botões laranja (seção 11)                              |
-| Perfil, Carteiras e Confirmação no mobile | Sem frame                                                                     | Mesmos componentes do desktop em uma coluna; a barra lateral do perfil vira abas roláveis |
-| Telas não desenhadas                      | Estados de carregamento, vazio, erro, pendente, recusado, 404                 | Seguem os mesmos tokens, tipografia e componentes                                         |
+| Onde                                      | No Figma                                                                      | Na implementação                                                                           |
+| ----------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Badge do carrinho                         | Mostra "6" com 17 itens no carrinho                                           | Soma das quantidades (`itemCount` da API)                                                  |
+| Carrinho mobile                           | Subtotal 8.92 com itens que somam 8.14                                        | Valores sempre da cotação da API                                                           |
+| IDs de token                              | Mudam entre telas (Violet Nomad #0009 e #0314, Ivory Baron #0552 e #0088)     | Um ID por NFT, igual em todas as telas                                                     |
+| Grid da Home                              | Um card sem nome nem preço, e imagens desalinhadas                            | Todos os cards completos e alinhados                                                       |
+| Detalhe mobile                            | Edições duplicadas ("1/10 1/10")                                              | Cada edição aparece uma vez                                                                |
+| Carrinho mobile                           | Lixeira sobreposta ao botão "+"                                               | Lixeira e seletor de quantidade separados                                                  |
+| Perfil e Carteiras                        | Item ativo da navegação principal é "Início"                                  | Nenhum item da navegação principal fica ativo; o ativo é o da barra lateral do perfil      |
+| Busca no desktop                          | O frame desktop não tem campo de busca no catálogo                            | Busca abaixo das abas do catálogo; a lupa do header leva até ela                           |
+| Hero                                      | Texto diferente no desktop ("…arte digital") e no mobile ("…cultura digital") | Mantido como no Figma                                                                      |
+| Carrinho                                  | "Resumo da carteira"                                                          | "Resumo do pedido", que descreve o bloco                                                   |
+| Pagamento                                 | Botão "Confirmar compra" direto                                               | "Revisar e confirmar compra" e, na revisão, "Confirmar compra"                             |
+| Cor de erro e texto de botão              | Vermelho `#ED1B2E`                                                            | Coral `#F0805F` e texto escuro nos botões laranja (seção 11)                               |
+| Perfil, Carteiras e Confirmação no mobile | Sem frame                                                                     | Mesmos componentes do desktop em uma coluna; a barra lateral do perfil vira abas roláveis  |
+| Telas não desenhadas                      | Estados de carregamento, vazio, erro, pendente, recusado, 404                 | Seguem os mesmos tokens, tipografia e componentes                                          |
+| Pontos do hero                            | Três pontos iguais de 8 px                                                    | O ativo vira uma pílula (estado sem depender só de cor) e cada ponto tem toque de 24 px    |
+| Slider de preço                           | Trilho inteiro na cor primária                                                | Trecho fora da faixa escolhida mais apagado, para a seleção ficar visível                  |
+| Contagem de resultados                    | Não aparece                                                                   | "48 NFTs encontrados" no desktop; no celular só para leitores de tela                      |
+| Carrinho desktop                          | Linha mostra só o ID do token                                                 | Também mostra a edição, que diferencia duas linhas do mesmo NFT                            |
+| Nome ENS                                  | Seletor ".eth" à esquerda do campo                                            | Sufixo fixo ".eth" à direita (o nome vem antes do domínio; não há outros domínios)         |
+| Carteira e rede (Pagamento)               | Opções de marca (MetaMask, WalletConnect, Coinbase)                           | Carteiras cadastradas (principal e secundária) com conexão simulada, como pede o enunciado |
+| Pagamento mobile                          | Só carteiras, total e "Confirmar compra"                                      | Mantém o formulário do perfil do colecionador, que o enunciado exige validar               |
+| Avatar e senha (Perfil)                   | Sem texto de apoio                                                            | Formatos aceitos ao lado dos botões; regra da nova senha só para leitores de tela          |
+| Recibo                                    | "Ver no Etherscan" sem aviso                                                  | Nota de que o hash é simulado e não existe na rede real                                    |
+
+**Medidas.** Os valores (larguras, espaçamentos, tamanhos de fonte, raios e cores) foram conferidos camada por camada no
+painel de propriedades do Figma e comparados com o DOM em 1440 px (desktop) e 414 px (mobile). Exemplos: conteúdo de 1200
+px, header de 45 px com 24 px acima, barra lateral do catálogo de 310 px, cards de 258 × 300 px, coluna de detalhes de
+448 px e modal de login de 500 × 600 px.
 
 **Assets.** As quatro ilustrações do Figma (Emerald Ape, Baron Ape, Golden Ape e Nomad Gorilla) foram exportadas em
 1254 px e ficam em `design/originals`. `pnpm images` gera as variantes AVIF e WebP em `public/images`. Como o Figma só tem

@@ -68,39 +68,45 @@ function DesktopRow({ item, status }: { item: CartItem; status: QuoteLineStatus 
   const actions = useItemActions(item)
   const lineTotal = eth.mul(item.unitPrice, item.quantity)
   return (
+    // Cart Item do Figma: linha de 70 px, miniatura colada à esquerda e colunas em space-between.
     <tr className={cn('bg-surface-card', actions.busy && 'opacity-70')} aria-busy={actions.busy}>
-      <td className="py-1.5 pl-0">
-        <div className="flex items-center gap-3">
+      <td className="p-0">
+        <div className="flex min-h-[70px] items-center gap-4">
           <Link
             to="/nft/$nftId"
             params={{ nftId: item.nftId }}
             search={{ edition: item.editionId }}
-            className="w-14 shrink-0"
+            className="w-[70px] shrink-0 self-start"
             tabIndex={-1}
             aria-hidden
           >
-            <NftImage art={item.art} alt="" sizes="56px" />
+            <NftImage art={item.art} alt="" sizes="70px" className="rounded-md" />
           </Link>
-          <div className="min-w-0">
+          <div className="min-w-0 py-2">
             <Link
               to="/nft/$nftId"
               params={{ nftId: item.nftId }}
               search={{ edition: item.editionId }}
-              className="block truncate text-body-lg font-bold hover:text-primary"
+              className="block truncate text-body-lg leading-4 font-bold hover:text-primary"
             >
               {item.name}
             </Link>
-            <p className="text-caption text-text-secondary">
-              ID do token: {item.tokenId} · Edição {EDITION_LABEL[item.editionId]}
+            <p className="mt-1.5 text-body leading-4 text-text-muted">
+              ID do token: {item.tokenId}
+            </p>
+            <p className="mt-1 text-caption leading-4 text-text-muted">
+              Edição {EDITION_LABEL[item.editionId]}
             </p>
             <ItemNotice item={item} status={status} />
           </div>
         </div>
       </td>
-      <td className="font-bold text-text-secondary tabular-nums">{formatEth(item.unitPrice)}</td>
+      <td className="text-body-lg leading-4 font-bold text-text-secondary tabular-nums">
+        {formatEth(item.unitPrice)}
+      </td>
       <td>
         <QuantityStepper
-          size="sm"
+          size="pill"
           value={item.quantity}
           max={item.maxPerOrder}
           onChange={actions.setQuantity}
@@ -108,16 +114,18 @@ function DesktopRow({ item, status }: { item: CartItem; status: QuoteLineStatus 
           disabled={actions.busy}
         />
       </td>
-      <td className="font-bold text-primary tabular-nums">{formatEth(lineTotal)}</td>
-      <td className="pr-4 text-right">
+      <td className="text-body-lg leading-4 font-bold text-text-accent tabular-nums">
+        {formatEth(lineTotal)}
+      </td>
+      <td className="pr-6">
         <button
           type="button"
           onClick={actions.remove}
           disabled={actions.busy}
           aria-label={`Remover ${item.name} do carrinho`}
-          className="grid size-8 place-items-center rounded-full text-text-secondary hover:bg-surface-raised hover:text-primary"
+          className="relative grid size-6 place-items-center rounded-sm text-text-muted after:absolute after:-inset-1 hover:text-primary"
         >
-          <Trash2 className="size-4" aria-hidden />
+          <Trash2 className="size-6" strokeWidth={1.5} aria-hidden />
         </button>
       </td>
     </tr>
@@ -127,21 +135,27 @@ function DesktopRow({ item, status }: { item: CartItem; status: QuoteLineStatus 
 function MobileItem({ item, status }: { item: CartItem; status: QuoteLineStatus }) {
   const actions = useItemActions(item)
   return (
-    <li className={cn('flex gap-3 rounded-2xl bg-surface-card p-2', actions.busy && 'opacity-70')}>
+    // Item do frame mobile: 100 px de altura, raio de 14 px, sombra e arte colada à esquerda.
+    <li
+      className={cn(
+        'flex min-h-[100px] gap-2 overflow-hidden rounded-[14px] bg-surface-card shadow-[0_6px_20px_rgba(10,6,4,0.45)]',
+        actions.busy && 'opacity-70',
+      )}
+    >
       <Link
         to="/nft/$nftId"
         params={{ nftId: item.nftId }}
-        className="w-20 shrink-0"
+        className="w-[100px] shrink-0"
         tabIndex={-1}
         aria-hidden
       >
-        <NftImage art={item.art} alt="" sizes="80px" className="rounded-xl" />
+        <NftImage art={item.art} alt="" sizes="100px" className="h-full rounded-l-[14px]" />
       </Link>
-      <div className="flex min-w-0 flex-1 flex-col justify-between py-1">
+      <div className="flex min-w-0 flex-1 flex-col justify-between py-[13px] pr-3">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
-            <p className="truncate text-body-lg font-bold">{item.name}</p>
-            <p className="text-caption text-text-secondary">
+            <p className="truncate text-[15px] leading-4 font-bold">{item.name}</p>
+            <p className="mt-1.5 text-body leading-4 text-text-secondary">
               Edição: {EDITION_LABEL[item.editionId]}
             </p>
           </div>
@@ -157,11 +171,11 @@ function MobileItem({ item, status }: { item: CartItem; status: QuoteLineStatus 
         </div>
         <ItemNotice item={item} status={status} />
         <div className="flex items-center justify-between">
-          <p className="text-body-lg font-bold text-primary">
+          <p className="text-[18px] leading-4 font-bold text-text-accent">
             {formatEth(eth.mul(item.unitPrice, item.quantity))}
           </p>
           <QuantityStepper
-            size="sm"
+            size="round"
             value={item.quantity}
             max={item.maxPerOrder}
             onChange={actions.setQuantity}
@@ -199,7 +213,7 @@ export function CartPage() {
   const quoteLoading = quote.isPending || (quote.isFetching && !quote.data)
 
   const summary = (variant: 'desktop' | 'mobile') => (
-    <div className="space-y-5">
+    <div className="space-y-5 md:space-y-6">
       <CouponForm couponCode={cart.data?.couponCode ?? null} quote={quote.data} variant={variant} />
       {quote.isError ? (
         <div role="alert" className="space-y-2 text-body">
@@ -220,7 +234,12 @@ export function CartPage() {
       )}
       <Button
         size="lg"
-        className={cn('w-full', variant === 'mobile' && 'rounded-full')}
+        className={cn(
+          'w-full',
+          variant === 'mobile'
+            ? 'rounded-full'
+            : 'h-10 rounded-[3px] text-[15px] leading-4 font-bold',
+        )}
         disabled={!quote.data || blocked || quote.isFetching}
         onClick={() => void navigate({ to: '/pagamento' })}
       >
@@ -230,7 +249,7 @@ export function CartPage() {
         <Link
           to="/"
           hash="catalogo"
-          className="block text-center text-body text-primary hover:underline"
+          className="-mt-3 block text-center text-[15px] leading-5 text-text-accent hover:underline"
         >
           Continuar explorando
         </Link>
@@ -239,13 +258,14 @@ export function CartPage() {
   )
 
   return (
-    <Container className="md:pt-6">
-      <MobileTopBar title="Carrinho de NFTs" />
+    <Container className="md:pt-8">
+      <MobileTopBar title="Carrinho de NFTs" className="pt-8 [&_h1]:leading-4" />
       <Breadcrumb
         className="hidden md:block"
         items={[{ label: 'Início', to: '/' }, { label: 'Mercado', to: '/' }, { label: 'Carrinho' }]}
       />
-      <h1 className="hidden md:mt-4 md:block md:text-heading-sm md:font-bold">Carrinho de NFTs</h1>
+      {/* O frame desktop não mostra título: ele fica só para leitores de tela (no mobile o título é o da barra). */}
+      <h1 className="hidden md:sr-only md:block">Carrinho de NFTs</h1>
 
       {changed.length > 0 && (
         <div
@@ -292,29 +312,37 @@ export function CartPage() {
           </Link>
         </div>
       ) : (
-        <div className="mt-2 grid gap-10 md:mt-4 lg:grid-cols-[1fr_271px] lg:gap-16">
+        <div className="mt-2 grid gap-10 md:mt-3 lg:grid-cols-[minmax(0,782px)_332px] lg:justify-between lg:gap-8">
           <div className="min-w-0">
             {cart.isPending ? (
               <CartSkeleton />
             ) : (
               <>
-                <table className="hidden w-full border-separate border-spacing-y-2 text-left md:table">
+                <table className="-mt-3 hidden w-full table-fixed border-separate border-spacing-y-3 text-left md:table">
                   <caption className="sr-only">Itens no carrinho</caption>
+                  {/* Colunas de 250/77/75/87/24 px distribuídas em 782 px, como no Figma. */}
+                  <colgroup>
+                    <col className="w-[39.8%]" />
+                    <col className="w-[17.7%]" />
+                    <col className="w-[17.4%]" />
+                    <col className="w-[19%]" />
+                    <col className="w-[6.1%]" />
+                  </colgroup>
                   <thead>
-                    <tr className="text-body-lg font-bold">
-                      <th scope="col" className="border-b border-border pb-2">
+                    <tr className="text-body-lg leading-4">
+                      <th scope="col" className="border-b border-primary/30 pb-3 font-bold">
                         NFTs
                       </th>
-                      <th scope="col" className="border-b border-border pb-2">
+                      <th scope="col" className="border-b border-primary/30 pb-3 font-medium">
                         Preço
                       </th>
-                      <th scope="col" className="border-b border-border pb-2">
+                      <th scope="col" className="border-b border-primary/30 pb-3 font-bold">
                         Edições
                       </th>
-                      <th scope="col" className="border-b border-border pb-2">
+                      <th scope="col" className="border-b border-primary/30 pb-3 font-medium">
                         Total
                       </th>
-                      <th scope="col" className="border-b border-border pb-2">
+                      <th scope="col" className="border-b border-primary/30 pb-3">
                         <span className="sr-only">Ações</span>
                       </th>
                     </tr>
@@ -329,7 +357,7 @@ export function CartPage() {
                     ))}
                   </tbody>
                 </table>
-                <ul className="space-y-3 md:hidden" aria-label="Itens no carrinho">
+                <ul className="space-y-5 md:hidden" aria-label="Itens no carrinho">
                   {items.map((item) => (
                     <MobileItem
                       key={item.id}
@@ -345,11 +373,12 @@ export function CartPage() {
           <aside aria-labelledby="resumo" className="md:self-start">
             <h2
               id="resumo"
-              className="hidden border-b border-border pb-2 text-title font-bold md:block"
+              className="hidden border-b border-primary/30 pb-3 text-[18px] leading-4 font-bold md:block"
             >
               Resumo do pedido
             </h2>
-            <div className="mt-0 rounded-t-3xl bg-surface-card px-4 py-6 md:mt-5 md:rounded-none md:bg-transparent md:p-0">
+            {/* Payment Summary do frame mobile: painel de ponta a ponta com raio de 40 px. */}
+            <div className="-mx-6 mt-0 rounded-t-[40px] bg-surface-card px-6 pt-6 pb-9 md:mx-0 md:mt-6 md:rounded-none md:bg-transparent md:p-0">
               <div className="hidden md:block">{summary('desktop')}</div>
               <div className="md:hidden">{summary('mobile')}</div>
             </div>
@@ -357,7 +386,7 @@ export function CartPage() {
         </div>
       )}
 
-      <div className="mt-16 hidden md:block">
+      <div className="mt-16 hidden md:block lg:mt-24">
         <NftRow title="Colecionadores também viram" query={{ tab: 'trending', sort: 'recent' }} />
       </div>
     </Container>

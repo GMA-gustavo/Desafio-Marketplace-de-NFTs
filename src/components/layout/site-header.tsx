@@ -1,5 +1,5 @@
 import { Link, useRouterState } from '@tanstack/react-router'
-import { LogIn, Search, ShoppingCart } from 'lucide-react'
+import { LogOut, Search, ShoppingCart } from 'lucide-react'
 import { Logo } from '@/components/brand/logo'
 import { buttonVariants } from '@/components/ui/button'
 import { AccountMenu } from '@/features/auth/account-menu'
@@ -9,8 +9,14 @@ import { notifyComingSoon } from '@/lib/coming-soon'
 import { cn } from '@/lib/utils'
 import { Container } from './container'
 
+// Header Row do Figma: 45 px de altura, itens alinhados ao topo; o sublinhado ativo (3 px)
+// fica centrado na linha divisória.
 const navLinkClass =
-  'relative py-2 text-body-lg text-foreground transition-colors hover:text-primary aria-[current=page]:text-primary aria-[current=page]:after:absolute aria-[current=page]:after:inset-x-0 aria-[current=page]:after:-bottom-[13px] aria-[current=page]:after:h-0.5 aria-[current=page]:after:bg-primary'
+  'relative inline-flex h-[45px] items-start text-body-lg leading-[21px] text-foreground transition-colors hover:text-primary aria-[current=page]:font-bold aria-[current=page]:text-text-accent aria-[current=page]:after:absolute aria-[current=page]:after:inset-x-0 aria-[current=page]:after:-bottom-[1.5px] aria-[current=page]:after:h-[3px] aria-[current=page]:after:bg-primary'
+
+// Ícones de 20–24 px como no Figma, com área de toque ampliada por um pseudo-elemento.
+const iconLinkClass =
+  'relative grid place-items-center rounded-sm hover:text-primary after:absolute after:-inset-2'
 
 const MARKET_PATHS = ['/nft', '/carrinho', '/pagamento', '/pedidos']
 
@@ -22,11 +28,19 @@ export function SiteHeader() {
   const isMarket = MARKET_PATHS.some((p) => location.pathname.startsWith(p))
 
   return (
-    <header className="hidden md:block">
+    <header className="hidden pt-6 md:block">
       <Container>
-        <div className="flex h-14 items-center gap-6 border-b border-border">
-          <Logo />
-          <nav aria-label="Principal" className="mx-auto flex items-center gap-8">
+        <div
+          className={cn(
+            'flex items-start justify-between gap-6 border-b',
+            // No Figma, as telas do Mercado usam a Header Row sem a linha divisória.
+            isMarket ? 'border-transparent' : 'border-primary/30',
+          )}
+        >
+          <div className="lg:w-40">
+            <Logo className="mt-2 block leading-[18px]" />
+          </div>
+          <nav aria-label="Principal" className="flex items-start gap-6 lg:gap-10">
             {/* O estado ativo é calculado aqui: "Mercado" cobre detalhe, carrinho e checkout. */}
             <Link
               to="/"
@@ -62,25 +76,20 @@ export function SiteHeader() {
               Aprenda
             </button>
           </nav>
-          <div className="flex items-center gap-4">
-            <Link
-              to="/"
-              hash="catalogo"
-              aria-label="Buscar NFTs"
-              className="grid size-9 place-items-center rounded-sm hover:text-primary"
-            >
+          <div className="flex h-[35px] items-center gap-7">
+            <Link to="/" hash="catalogo" aria-label="Buscar NFTs" className={iconLinkClass}>
               <Search className="size-5" aria-hidden />
             </Link>
             <Link
               to="/carrinho"
               aria-label={`Carrinho, ${cartCount} ${cartCount === 1 ? 'item' : 'itens'}`}
-              className="relative grid size-9 place-items-center rounded-sm hover:text-primary"
+              className={cn(iconLinkClass, 'h-6 w-[31px] justify-items-start')}
             >
-              <ShoppingCart className="size-5" aria-hidden />
+              <ShoppingCart className="size-6" aria-hidden />
               {cartCount > 0 && (
                 <span
                   aria-hidden
-                  className="absolute top-0.5 right-0 grid min-w-4 place-items-center rounded-full bg-primary px-1 text-tiny leading-4 font-bold text-primary-foreground"
+                  className="absolute top-0 right-0 grid min-w-4 place-items-center rounded-full bg-primary px-0.5 text-tiny leading-4 font-medium text-primary-foreground outline-2 outline-ink"
                 >
                   {cartCount > 99 ? '99+' : cartCount}
                 </span>
@@ -93,9 +102,12 @@ export function SiteHeader() {
                 to="/entrar"
                 search={{ redirect: location.href }}
                 aria-busy={isPending}
-                className={cn(buttonVariants({ size: 'sm' }), 'h-8 gap-1.5 px-2.5')}
+                className={cn(
+                  buttonVariants(),
+                  'h-[35px] w-[100px] gap-1 rounded-md px-0 text-body-lg font-medium',
+                )}
               >
-                <LogIn className="size-4" aria-hidden />
+                <LogOut className="size-5" aria-hidden />
                 Entrar
               </Link>
             )}

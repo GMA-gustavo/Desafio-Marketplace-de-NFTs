@@ -21,19 +21,22 @@ function FacetList({
   items,
   selected,
   onToggle,
+  boldCount = true,
 }: {
   title: string
   items: Facets['categories'] | undefined
   selected: string[] | undefined
   onToggle: (slug: string) => void
+  /** No Figma, as contagens de Coleções são em negrito e as de Rede não. */
+  boldCount?: boolean
 }) {
   const headingId = `facet-${title.toLowerCase().replace(/\s+/g, '-')}`
   return (
     <section aria-labelledby={headingId}>
-      <h3 id={headingId} className="text-body-lg font-bold">
+      <h3 id={headingId} className="text-[18px] leading-4 font-bold">
         {title}
       </h3>
-      <ul className="mt-2 space-y-0.5">
+      <ul className="mt-3 px-3">
         {(items ?? []).map((item) => {
           const active = selected?.includes(item.slug) ?? false
           return (
@@ -44,14 +47,12 @@ function FacetList({
                 onClick={() => onToggle(item.slug)}
                 disabled={item.count === 0 && !active}
                 className={cn(
-                  'flex w-full items-center justify-between rounded-sm px-2.5 py-1.5 text-left text-body text-text-secondary transition-colors hover:bg-surface-raised hover:text-foreground disabled:opacity-40',
-                  active && 'bg-surface-raised font-bold text-primary hover:text-primary',
+                  'flex h-10 w-full items-center justify-between rounded-sm text-left text-[15px] leading-10 text-text-secondary transition-colors hover:text-foreground disabled:opacity-40',
+                  active && 'text-text-accent hover:text-text-accent',
                 )}
               >
                 <span>{item.label}</span>
-                <span className={cn('font-bold', active ? 'text-primary' : 'text-foreground')}>
-                  ({item.count})
-                </span>
+                <span className={cn(boldCount && 'font-bold')}>({item.count})</span>
               </button>
             </li>
           )
@@ -84,43 +85,43 @@ function PriceFilter({
 
   return (
     <section aria-labelledby="facet-preco">
-      <h3 id="facet-preco" className="text-body-lg font-bold">
+      <h3 id="facet-preco" className="text-[18px] leading-4 font-bold">
         Faixa de preço
       </h3>
-      <Slider
-        className="mt-3 px-1"
-        min={min}
-        max={max}
-        step={0.01}
-        minStepsBetweenValues={1}
-        value={range}
-        onValueChange={(value) => setRange(value as [number, number])}
-        thumbLabels={['Preço mínimo em ETH', 'Preço máximo em ETH']}
-        disabled={!facets}
-      />
-      <p className="mt-2 px-2.5 text-body" aria-live="polite">
-        Preço: {formatPrice(range[0])} - {formatPrice(range[1])} ETH
-      </p>
-      <Button
-        size="sm"
-        className="mt-2 ml-2.5 h-7 px-2.5"
-        disabled={!facets}
-        onClick={() =>
-          onChange({
-            minPrice: range[0] > min ? range[0].toFixed(2) : undefined,
-            maxPrice: range[1] < max ? range[1].toFixed(2) : undefined,
-          })
-        }
-      >
-        Aplicar
-      </Button>
+      <div className="mt-3 space-y-3 pl-3">
+        <Slider
+          min={min}
+          max={max}
+          step={0.01}
+          minStepsBetweenValues={1}
+          value={range}
+          onValueChange={(value) => setRange(value as [number, number])}
+          thumbLabels={['Preço mínimo em ETH', 'Preço máximo em ETH']}
+          disabled={!facets}
+        />
+        <p className="text-[15px] leading-5" aria-live="polite">
+          Preço: {formatPrice(range[0])} - {formatPrice(range[1])} ETH
+        </p>
+        <Button
+          className="h-9 rounded-md px-3 text-body-lg leading-5"
+          disabled={!facets}
+          onClick={() =>
+            onChange({
+              minPrice: range[0] > min ? range[0].toFixed(2) : undefined,
+              maxPrice: range[1] < max ? range[1].toFixed(2) : undefined,
+            })
+          }
+        >
+          Aplicar
+        </Button>
+      </div>
     </section>
   )
 }
 
 export function CatalogFilters({ search, facets, onChange, className }: CatalogFiltersProps) {
   return (
-    <div className={cn('space-y-8 bg-surface-card p-4', className)}>
+    <div className={cn('space-y-10 bg-surface-card p-5', className)}>
       <FacetList
         title="Coleções"
         items={facets?.categories}
@@ -130,6 +131,7 @@ export function CatalogFilters({ search, facets, onChange, className }: CatalogF
       <PriceFilter facets={facets} search={search} onChange={onChange} />
       <FacetList
         title="Rede"
+        boldCount={false}
         items={facets?.networks}
         selected={search.networks}
         onToggle={(slug) =>

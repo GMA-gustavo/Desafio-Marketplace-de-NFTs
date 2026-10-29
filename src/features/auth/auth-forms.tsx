@@ -18,6 +18,7 @@ import {
 } from '@/contracts/auth'
 import { notifyComingSoon } from '@/lib/coming-soon'
 import { applyApiErrors } from '@/lib/form-errors'
+import { cn } from '@/lib/utils'
 import { completeAuthentication, safeRedirect } from './session'
 
 function useAuthSuccess(redirect: string | undefined) {
@@ -30,10 +31,21 @@ function useAuthSuccess(redirect: string | undefined) {
   }
 }
 
-function SocialButtons() {
+// Social Button do Figma: 40 px, raio de 5 px, ícone de 20 px e texto de 13 px.
+const socialButton =
+  'h-10 w-full gap-3 rounded-[5px] border-border text-[13px] leading-4 font-medium text-text-secondary'
+
+function SocialButtons({ dialog }: { dialog?: boolean }) {
   return (
-    <div className="space-y-3">
-      <div className="flex items-center gap-3 text-caption text-foreground" aria-hidden>
+    <div className={cn('space-y-3', dialog ? 'pt-6' : 'pt-10')}>
+      {/* No modal desktop as linhas do divisor vão de borda a borda (fora do recuo de 80 px). */}
+      <div
+        className={cn(
+          'flex items-center gap-3 text-[13px] leading-4 text-foreground',
+          dialog && 'md:-mx-20',
+        )}
+        aria-hidden
+      >
         <span className="h-px flex-1 bg-border" />
         Ou continue com
         <span className="h-px flex-1 bg-border" />
@@ -41,24 +53,34 @@ function SocialButtons() {
       <Button
         type="button"
         variant="outline"
-        className="w-full border-border font-medium"
+        className={socialButton}
         onClick={() => notifyComingSoon('O login com Google')}
       >
-        <GoogleIcon className="size-4" /> Continuar com Google
+        <GoogleIcon className="size-5" /> Continuar com Google
       </Button>
       <Button
         type="button"
         variant="outline"
-        className="w-full border-border font-medium"
+        className={socialButton}
         onClick={() => notifyComingSoon('O login com Facebook')}
       >
-        <FacebookIcon className="size-4 text-[#3B5999]" /> Continuar com Facebook
+        <FacebookIcon className="size-5 text-[#3B5999]" /> Continuar com Facebook
       </Button>
     </div>
   )
 }
 
-export function LoginForm({ redirect }: { redirect?: string }) {
+// Inputs dos modais de autenticação: 40 px, raio de 5 px e 16 px de recuo.
+// Mobile (telas cheias): campos de 50 px e botão de 60 px com raio de 10 px, 40 px entre os blocos.
+const authInput = (dialog?: boolean) =>
+  cn('px-4 placeholder:text-text-muted', dialog ? 'h-10 rounded-[5px]' : 'h-[50px] rounded-[10px]')
+const submitButton = (dialog?: boolean) =>
+  cn(
+    'w-full text-body-lg leading-4 font-bold',
+    dialog ? 'mt-6 h-[45px] rounded-[5px]' : 'mt-10 h-[60px] rounded-[10px]',
+  )
+
+export function LoginForm({ redirect, dialog }: { redirect?: string; dialog?: boolean }) {
   const onSuccess = useAuthSuccess(redirect)
   const [formError, setFormError] = useState<string | null>(null)
   const form = useForm<LoginInput>({
@@ -78,7 +100,7 @@ export function LoginForm({ redirect }: { redirect?: string }) {
   return (
     <form
       noValidate
-      className="space-y-4"
+      className="space-y-3"
       onSubmit={form.handleSubmit((values) => {
         setFormError(null)
         login.mutate(values)
@@ -93,6 +115,7 @@ export function LoginForm({ redirect }: { redirect?: string }) {
             type="email"
             autoComplete="email"
             placeholder="contato@email.com"
+            className={authInput(dialog)}
           />
         )}
       </FormField>
@@ -103,27 +126,28 @@ export function LoginForm({ redirect }: { redirect?: string }) {
             {...form.register('password')}
             autoComplete="current-password"
             placeholder="Senha"
+            className={authInput(dialog)}
           />
         )}
       </FormField>
-      <div className="text-right">
+      <div>
         <button
           type="button"
-          className="text-body text-primary hover:underline"
+          className="text-body leading-4 text-text-accent hover:underline"
           onClick={() => notifyComingSoon('A recuperação de senha')}
         >
           Esqueceu a senha?
         </button>
       </div>
-      <Button type="submit" size="lg" className="w-full" disabled={login.isPending}>
+      <Button type="submit" size="lg" className={submitButton(dialog)} disabled={login.isPending}>
         {login.isPending ? 'Entrando…' : 'Entrar'}
       </Button>
-      <SocialButtons />
+      <SocialButtons dialog={dialog} />
     </form>
   )
 }
 
-export function RegisterForm({ redirect }: { redirect?: string }) {
+export function RegisterForm({ redirect, dialog }: { redirect?: string; dialog?: boolean }) {
   const onSuccess = useAuthSuccess(redirect)
   const [formError, setFormError] = useState<string | null>(null)
   const form = useForm<RegisterInput>({
@@ -146,7 +170,7 @@ export function RegisterForm({ redirect }: { redirect?: string }) {
   return (
     <form
       noValidate
-      className="space-y-4"
+      className="space-y-3"
       onSubmit={form.handleSubmit((values) => {
         setFormError(null)
         register.mutate(values)
@@ -160,6 +184,7 @@ export function RegisterForm({ redirect }: { redirect?: string }) {
             {...form.register('username')}
             autoComplete="username"
             placeholder="Nome de usuário"
+            className={authInput(dialog)}
           />
         )}
       </FormField>
@@ -171,6 +196,7 @@ export function RegisterForm({ redirect }: { redirect?: string }) {
             type="email"
             autoComplete="email"
             placeholder="Digite seu e-mail"
+            className={authInput(dialog)}
           />
         )}
       </FormField>
@@ -186,6 +212,7 @@ export function RegisterForm({ redirect }: { redirect?: string }) {
             {...form.register('password')}
             autoComplete="new-password"
             placeholder="Senha"
+            className={authInput(dialog)}
           />
         )}
       </FormField>
@@ -196,13 +223,19 @@ export function RegisterForm({ redirect }: { redirect?: string }) {
             {...form.register('confirmPassword')}
             autoComplete="new-password"
             placeholder="Confirmar senha"
+            className={authInput(dialog)}
           />
         )}
       </FormField>
-      <Button type="submit" size="lg" className="w-full" disabled={register.isPending}>
+      <Button
+        type="submit"
+        size="lg"
+        className={submitButton(dialog)}
+        disabled={register.isPending}
+      >
         {register.isPending ? 'Criando conta…' : 'Criar conta'}
       </Button>
-      <SocialButtons />
+      <SocialButtons dialog={dialog} />
     </form>
   )
 }

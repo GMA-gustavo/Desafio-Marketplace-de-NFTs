@@ -17,7 +17,8 @@ export function NftImage({ art, alt, sizes, priority, className, ...props }: Nft
     WIDTHS.map((w) => `/images/nfts/${art}-${w}.${ext} ${w}w`).join(', ')
 
   return (
-    <picture>
+    // `contents`: o <picture> inline criava uma linha extra abaixo da imagem.
+    <picture className="contents">
       <source type="image/avif" srcSet={srcSet('avif')} sizes={sizes} />
       <img
         src={`/images/nfts/${art}-640.webp`}

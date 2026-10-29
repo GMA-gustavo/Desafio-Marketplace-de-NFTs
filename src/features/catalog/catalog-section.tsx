@@ -12,6 +12,7 @@ import { NETWORK_LABEL } from '@/contracts/common'
 import {
   CATALOG_SORT_LABEL,
   catalogSortSchema,
+  type CatalogResponse,
   type CatalogSort,
   type CatalogTab,
 } from '@/contracts/nft'
@@ -74,7 +75,7 @@ function SearchBox({
         Buscar NFTs por nome, coleção ou token
       </label>
       <Search
-        className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-text-secondary"
+        className="pointer-events-none absolute top-1/2 left-3 size-[22px] -translate-y-1/2 text-text-muted md:size-4 md:text-text-secondary"
         aria-hidden
       />
       <input
@@ -84,7 +85,7 @@ function SearchBox({
         onChange={(e) => setText(e.target.value)}
         placeholder="Explorar coleções"
         autoComplete="off"
-        className="h-10 w-full rounded-lg border border-border bg-surface-card pr-3 pl-9 text-body placeholder:text-text-secondary md:h-9 md:rounded-sm"
+        className="h-[45px] w-full rounded-[10px] bg-surface-card pr-3 pl-11 text-body font-bold placeholder:text-text-muted md:h-9 md:rounded-sm md:border md:border-border md:pl-9 md:font-normal md:placeholder:text-text-secondary"
       />
     </form>
   )
@@ -99,7 +100,7 @@ function SortSelect({
 }) {
   const id = useId()
   return (
-    <div className="flex items-center gap-1 text-body-lg">
+    <div className="flex items-center gap-1 text-[15px] leading-5">
       <label htmlFor={id} className="whitespace-nowrap">
         Ordenar por:
       </label>
@@ -107,7 +108,7 @@ function SortSelect({
         id={id}
         value={value}
         onChange={(e) => onChange(catalogSortSchema.parse(e.target.value))}
-        className="rounded-sm bg-transparent py-1 pr-1 text-body-lg text-foreground focus-visible:outline-2"
+        className="rounded-sm bg-transparent pr-1 text-[15px] leading-5 text-foreground focus-visible:outline-2"
       >
         {Object.entries(CATALOG_SORT_LABEL).map(([key, label]) => (
           <option key={key} value={key} className="bg-surface-card">
@@ -117,6 +118,71 @@ function SortSelect({
       </select>
     </div>
   )
+}
+
+/** Busca + gaveta de filtros e ordenação (celular e tablet). */
+function CatalogToolbar({
+  search,
+  facets,
+  update,
+}: {
+  search: CatalogSearch
+  facets: CatalogResponse['facets'] | undefined
+  update: ReturnType<typeof useCatalogSearch>['update']
+}) {
+  return (
+    <div className="flex gap-2">
+      <SearchBox value={search.q} onSearch={(q) => void update({ q })} />
+      <Sheet>
+        <SheetTrigger
+          render={
+            <button
+              type="button"
+              aria-label="Abrir filtros e ordenação"
+              className="grid size-[45px] shrink-0 place-items-center rounded-[14px] bg-gradient-to-b from-primary/45 to-primary text-ink"
+            />
+          }
+        >
+          <SlidersHorizontal className="size-[22px]" aria-hidden />
+        </SheetTrigger>
+        <SheetContent
+          side="bottom"
+          className="max-h-[85dvh] overflow-y-auto rounded-t-2xl bg-surface-card"
+        >
+          <SheetHeader>
+            <SheetTitle>Filtros</SheetTitle>
+          </SheetHeader>
+          <div className="space-y-6 px-4 pb-8">
+            <SortSelect
+              value={search.sort ?? 'recent'}
+              onChange={(sort) => void update({ sort })}
+            />
+            <CatalogFilters
+              className="p-0"
+              search={search}
+              facets={facets}
+              onChange={(patch) => void update(patch)}
+            />
+          </div>
+        </SheetContent>
+      </Sheet>
+    </div>
+  )
+}
+
+/**
+ * Frame Mobile / Início: a barra de busca e filtros fica no topo, acima do hero.
+ * Usa a mesma consulta do catálogo (mesma chave no cache) só para ler as facetas.
+ */
+export function MobileCatalogBar() {
+  const { search, update } = useCatalogSearch()
+  const query = toCatalogQuery(search)
+  const catalog = useQuery({
+    queryKey: queryKeys.catalog(query),
+    queryFn: ({ signal }) => catalogApi.list(query, signal),
+    placeholderData: keepPreviousData,
+  })
+  return <CatalogToolbar search={search} facets={catalog.data?.facets} update={update} />
 }
 
 function ActiveFilters({
@@ -190,24 +256,28 @@ function Spotlight() {
   })
   const nft = highlights.data?.spotlight
   return (
-    <section aria-labelledby="spotlight-title" className="bg-surface-card">
-      <div className="bg-gradient-to-b from-surface-dark to-surface-card px-4 pt-6 pb-2">
-        <h2 id="spotlight-title" className="text-title font-bold text-primary">
+    // Featured NFT Banner do Figma: 310 × 470, títulos acima e arte de 368 px colada na base.
+    <section
+      aria-labelledby="spotlight-title"
+      className="flex h-[470px] flex-col gap-4 bg-gradient-to-b from-primary/10 to-primary/[0.03] pt-6 pb-1"
+    >
+      <div className="space-y-4">
+        <h2 id="spotlight-title" className="px-5 text-[24px] leading-8 font-bold text-text-accent">
           NFT EM DESTAQUE
         </h2>
-        <p className="mt-1 text-center text-body-lg font-bold">OFERTA LIMITADA</p>
+        <p className="px-5 text-center text-[22px] leading-4 font-bold">OFERTA LIMITADA</p>
       </div>
       {nft ? (
         <Link to="/nft/$nftId" params={{ nftId: nft.id }} className="block">
           <NftImage
             art={nft.art}
             alt={`${nft.name} — ${nft.price} ETH`}
-            sizes="253px"
-            className="rounded-2xl"
+            sizes="310px"
+            className="aspect-auto h-[368px] rounded-[22px]"
           />
         </Link>
       ) : (
-        <Skeleton className="aspect-square w-full rounded-2xl" />
+        <Skeleton className="h-[368px] w-full rounded-[22px]" />
       )}
     </section>
   )
@@ -240,8 +310,9 @@ export function CatalogSection() {
       <h2 id="catalogo-title" className="sr-only">
         Catálogo de NFTs
       </h2>
-      <div className="grid gap-8 lg:grid-cols-[253px_1fr] lg:gap-10">
-        <aside className="hidden space-y-5 lg:block" aria-label="Filtros do catálogo">
+      {/* Products do Figma: barra lateral de 310 px, 48 px de espaço e grade de 842 px. */}
+      <div className="grid gap-8 lg:grid-cols-[253px_1fr] lg:gap-10 xl:grid-cols-[310px_1fr] xl:gap-12">
+        <aside className="hidden space-y-6 lg:block" aria-label="Filtros do catálogo">
           <CatalogFilters
             search={search}
             facets={facets}
@@ -250,46 +321,17 @@ export function CatalogSection() {
           <Spotlight />
         </aside>
 
-        <div className="min-w-0 space-y-6">
-          <div className="flex gap-3 lg:hidden">
-            <SearchBox value={search.q} onSearch={(q) => void update({ q })} />
-            <Sheet>
-              <SheetTrigger
-                render={
-                  <button
-                    type="button"
-                    aria-label="Abrir filtros e ordenação"
-                    className="grid size-10 shrink-0 place-items-center rounded-lg bg-primary text-ink"
-                  />
-                }
-              >
-                <SlidersHorizontal className="size-5" aria-hidden />
-              </SheetTrigger>
-              <SheetContent
-                side="bottom"
-                className="max-h-[85dvh] overflow-y-auto rounded-t-2xl bg-surface-card"
-              >
-                <SheetHeader>
-                  <SheetTitle>Filtros</SheetTitle>
-                </SheetHeader>
-                <div className="space-y-6 px-4 pb-8">
-                  <SortSelect
-                    value={search.sort ?? 'recent'}
-                    onChange={(sort) => void update({ sort })}
-                  />
-                  <CatalogFilters
-                    className="p-0"
-                    search={search}
-                    facets={facets}
-                    onChange={(patch) => void update(patch)}
-                  />
-                </div>
-              </SheetContent>
-            </Sheet>
+        <div className="relative min-w-0 space-y-4 md:space-y-6 lg:space-y-8">
+          <div className="hidden md:block lg:hidden">
+            <CatalogToolbar search={search} facets={facets} update={update} />
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
-            <div role="group" aria-label="Lista de NFTs" className="flex gap-4 overflow-x-auto">
+            <div
+              role="group"
+              aria-label="Lista de NFTs"
+              className="flex gap-4 overflow-x-auto md:gap-5"
+            >
               {TABS.map((t) => (
                 <button
                   key={t.value}
@@ -297,8 +339,9 @@ export function CatalogSection() {
                   aria-pressed={tab === t.value}
                   onClick={() => void update({ tab: t.value === 'all' ? undefined : t.value })}
                   className={cn(
-                    'border-b-2 border-transparent pb-1 text-body-lg whitespace-nowrap transition-colors hover:text-primary',
-                    tab === t.value && 'border-primary text-primary',
+                    // Mobile: 14 px, ativo em negrito; desktop: 15 px médio (Tabs dos dois frames).
+                    'border-b-2 border-transparent pb-0.5 text-body leading-4 whitespace-nowrap transition-colors hover:text-primary md:text-[15px] md:font-medium',
+                    tab === t.value && 'border-primary font-bold text-text-accent',
                   )}
                 >
                   {t.label}
@@ -313,12 +356,18 @@ export function CatalogSection() {
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-3">
+          {/* No celular, sem filtros ativos, a linha só leva o contador (sr-only): sai do fluxo. */}
+          <div className="flex flex-wrap items-center justify-between gap-3 max-md:not-has-[ul]:absolute">
             <div className="hidden w-64 lg:flex">
               <SearchBox value={search.q} onSearch={(q) => void update({ q })} />
             </div>
             <ActiveFilters search={search} labels={categoryLabels} update={(p) => void update(p)} />
-            <p className="ml-auto text-caption text-text-secondary" aria-live="polite" aria-atomic>
+            {/* No celular o frame não mostra a contagem: ela fica só para leitores de tela. */}
+            <p
+              className="ml-auto text-caption text-text-secondary max-md:sr-only"
+              aria-live="polite"
+              aria-atomic
+            >
               {catalog.isPending
                 ? 'Carregando NFTs…'
                 : data
@@ -340,7 +389,10 @@ export function CatalogSection() {
           )}
 
           {catalog.isPending ? (
-            <ul className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 md:gap-x-7" aria-hidden>
+            <ul
+              className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 md:gap-x-7 lg:grid-cols-3 lg:gap-x-[34px] lg:gap-y-18"
+              aria-hidden
+            >
               {Array.from({ length: 9 }, (_, i) => (
                 <li key={i}>
                   <NftCardSkeleton />
@@ -385,7 +437,7 @@ export function CatalogSection() {
             <ul
               aria-busy={isUpdating}
               className={cn(
-                'grid grid-cols-2 gap-x-4 gap-y-8 transition-opacity sm:grid-cols-3 md:gap-x-7',
+                'grid grid-cols-2 gap-x-4 gap-y-6 pb-8 transition-opacity sm:grid-cols-3 sm:gap-y-8 sm:pb-0 md:gap-x-7 lg:grid-cols-3 lg:gap-x-[34px] lg:gap-y-18 max-sm:[&>li:nth-child(even)]:translate-y-8',
                 isUpdating && 'opacity-60',
               )}
             >
@@ -397,7 +449,12 @@ export function CatalogSection() {
             </ul>
           )}
 
-          {data && <Pagination page={data.page} totalPages={data.totalPages} onChange={goToPage} />}
+          {data && (
+            // 88 px entre a grade e a paginação, como no Figma.
+            <div className="lg:pt-14">
+              <Pagination page={data.page} totalPages={data.totalPages} onChange={goToPage} />
+            </div>
+          )}
         </div>
       </div>
     </section>

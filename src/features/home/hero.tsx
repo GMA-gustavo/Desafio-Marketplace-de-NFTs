@@ -51,22 +51,38 @@ export function Hero() {
   return (
     <section aria-roledescription="carrossel" aria-label="Destaques da Kurio">
       {/* Desktop / tablet */}
-      <Container className="hidden pt-6 md:block">
-        <div className="grid grid-cols-[1fr_minmax(280px,450px)] items-center gap-10">
-          <div className="pl-0 lg:pl-8">
-            <p className="text-body">Bem-vindo à Kurio</p>
-            <h1 className="mt-3 text-display-sm font-bold uppercase lg:text-display">
-              Seja dono do futuro <br className="hidden lg:block" />
-              da arte digital
-            </h1>
-            <p className="mt-2 max-w-md text-body text-text-secondary">
-              Descubra NFTs selecionados de criadores emergentes e consagrados. Colecione arte
-              digital rara, apoie artistas e tenha uma parte da cultura da internet.
-            </p>
-            <a href="#catalogo" className={buttonVariants({ className: 'mt-8 uppercase' })}>
-              Explorar
-            </a>
-            <div className="mt-8 flex justify-end pr-8">{dots}</div>
+      <Container className="hidden pt-8 md:block">
+        {/* Hero do Figma: 450 px de altura, recuo de 40 px e coluna de texto de 600 px. */}
+        <div className="grid grid-cols-[1fr_minmax(280px,450px)] items-center gap-10 lg:grid-cols-[600px_450px] lg:justify-between lg:gap-0 lg:pl-10">
+          <div className="flex flex-col gap-11">
+            <div className="flex flex-col items-start gap-8">
+              <div className="flex flex-col gap-1">
+                <div className="flex flex-col gap-2">
+                  <p className="text-body leading-4 font-medium tracking-[0.1em]">
+                    Bem-vindo à Kurio
+                  </p>
+                  <h1 className="text-display-sm font-bold uppercase lg:text-display">
+                    Seja dono do futuro <br className="hidden lg:block" />
+                    da arte digital
+                  </h1>
+                </div>
+                <p className="max-w-[557px] text-body text-text-secondary">
+                  Descubra NFTs selecionados de criadores emergentes e consagrados. Colecione arte
+                  digital rara, apoie artistas e tenha uma parte da cultura da internet.
+                </p>
+              </div>
+              <a
+                href="#catalogo"
+                className={cn(
+                  buttonVariants(),
+                  'h-10 w-[140px] justify-start rounded-md pl-7 text-body-lg leading-5 uppercase',
+                )}
+              >
+                Explorar
+              </a>
+            </div>
+            {/* 8 px de altura no layout, como no Figma; a área de toque transborda. */}
+            <div className="flex h-2 items-center justify-end">{dots}</div>
           </div>
           <Link
             to="/nft/$nftId"
@@ -88,20 +104,23 @@ export function Hero() {
 
       {/* Mobile (frame Mobile / Início) */}
       <Container className="md:hidden">
-        <div className="relative mt-4 overflow-hidden rounded-2xl bg-gradient-to-br from-[#8a5a33] via-surface-dark to-surface-card p-3">
+        {/* Hero Banner do Figma: 190 px, raio de 30 px e gradiente da cor primária (20% → 10%). */}
+        <div className="relative mt-4 h-[190px] overflow-hidden rounded-[30px] bg-gradient-to-b from-primary/20 to-primary/10 p-4">
           <div aria-hidden className="absolute -top-10 left-16 size-48 rounded-full bg-white/5" />
           <div className="relative grid grid-cols-[1fr_auto] gap-3">
             <div>
               <p className="text-caption font-bold">Bem-vindo à Kurio</p>
-              <h1 className="mt-1 text-title font-bold uppercase">Seja dono da cultura digital</h1>
+              <h1 className="mt-1.5 text-[18px] leading-[29px] font-bold uppercase">
+                Seja dono da cultura digital
+              </h1>
               <p className="mt-1 text-caption text-text-secondary">
                 Descubra NFTs selecionados de criadores do mundo todo.
               </p>
               <a
                 href="#catalogo"
-                className="mt-1 inline-flex items-center gap-1 text-caption font-bold text-primary"
+                className="mt-1 inline-flex items-center gap-2 text-caption leading-[14px] font-bold text-text-accent"
               >
-                EXPLORAR <ArrowRight className="size-3.5" aria-hidden />
+                EXPLORAR <ArrowRight className="size-4 text-primary" aria-hidden />
               </a>
             </div>
             <Link

@@ -15,6 +15,8 @@ interface FormFieldProps {
   required?: boolean
   /** Esconde o label visualmente (ex.: layout com placeholder), mantendo-o acessível. */
   hideLabel?: boolean
+  /** Esconde a dica visualmente (o frame não tem texto de apoio); continua ligada ao campo. */
+  hideHint?: boolean
   className?: string
   children: (control: ControlProps) => React.ReactNode
 }
@@ -26,6 +28,7 @@ export function FormField({
   hint,
   required,
   hideLabel,
+  hideHint,
   className,
   children,
 }: FormFieldProps) {
@@ -35,11 +38,18 @@ export function FormField({
   const describedBy = [error && errorId, hint && hintId].filter(Boolean).join(' ') || undefined
 
   return (
-    <div className={cn('flex flex-col gap-1.5', className)}>
-      <label htmlFor={id} className={cn('text-body text-foreground', hideLabel && 'sr-only')}>
+    <div className={cn('flex flex-col', className)}>
+      {/* Rótulo do Figma: 15/15 numa linha de 29 px, definida pelo asterisco de 22 px. */}
+      <label
+        htmlFor={id}
+        className={cn(
+          'flex min-h-[29px] items-start text-[15px] leading-[15px] text-foreground',
+          hideLabel && 'sr-only',
+        )}
+      >
         {label}
         {required && (
-          <span aria-hidden className="ml-0.5 text-coral">
+          <span aria-hidden className="-mt-0.5 ml-0.5 text-[22px] leading-[22px] text-coral">
             *
           </span>
         )}
@@ -51,12 +61,15 @@ export function FormField({
         'aria-required': required ? true : undefined,
       })}
       {hint && !error && (
-        <p id={hintId} className="text-caption text-text-secondary">
+        <p
+          id={hintId}
+          className={cn('mt-1.5 text-caption text-text-secondary', hideHint && 'sr-only')}
+        >
           {hint}
         </p>
       )}
       {error && (
-        <p id={errorId} className="text-caption text-destructive">
+        <p id={errorId} className="mt-1.5 text-caption text-destructive">
           {error}
         </p>
       )}

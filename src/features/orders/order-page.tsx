@@ -1,10 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { ExternalLink, Loader2, RotateCw, X, XCircle } from 'lucide-react'
-import { useEffect } from 'react'
+import { Fragment, useEffect } from 'react'
 import { ordersApi } from '@/api/orders'
 import { queryKeys } from '@/api/query-keys'
 import { Container } from '@/components/layout/container'
+import { NftImage } from '@/components/nft/nft-image'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { NETWORK_LABEL, WALLET_PROVIDER_LABEL } from '@/contracts/common'
@@ -15,6 +16,7 @@ import { errorMessage, toApiError } from '@/lib/api-error'
 import { shortAddress } from '@/lib/format'
 import { eth, formatEth } from '@/lib/money'
 import { storage } from '@/lib/storage'
+import { cn } from '@/lib/utils'
 
 const PENDING_POLL_MS = 3000
 
@@ -22,7 +24,7 @@ function ThankYouIcon() {
   return (
     <svg
       viewBox="0 0 64 72"
-      className="mx-auto h-16 text-primary"
+      className="mx-auto size-20 text-primary"
       aria-hidden
       fill="none"
       stroke="currentColor"
@@ -57,98 +59,150 @@ function ThankYouIcon() {
   )
 }
 
+/** "29 Out, 2026": formato curto do recibo no Figma ("29 Jul, 2026"), com o mês em português. */
 function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString('pt-BR', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  })
+  const date = new Date(iso)
+  const month = date.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${day} ${month.charAt(0).toUpperCase()}${month.slice(1)}, ${date.getFullYear()}`
 }
 
 /** Recibo: reproduz o snapshot do pedido; mudanças posteriores no catálogo não o alteram. */
 function Receipt({ order }: { order: Order }) {
   const navigate = useNavigate()
+  const meta = [
+    {
+      term: 'ID da transação',
+      value: order.txHash ? shortAddress(order.txHash) : '—',
+      strong: true,
+    },
+    { term: 'Data', value: formatDate(order.settledAt ?? order.createdAt) },
+    { term: 'Total', value: formatEth(order.total) },
+    { term: 'Carteira', value: WALLET_PROVIDER_LABEL[order.wallet.provider], strong: true },
+  ]
   return (
+    // Order Confirmation Modal do Figma: 578 px, cabeçalho de 156 px e faixa de metadados.
     <article
       aria-labelledby="receipt-title"
-      className="relative mx-auto max-w-[472px] border-b-8 border-primary bg-surface-card"
+      className="relative mx-auto max-w-[578px] bg-surface-card"
     >
       <button
         type="button"
         onClick={() => void navigate({ to: '/' })}
         aria-label="Fechar e voltar ao início"
-        className="absolute top-3 right-3 grid size-8 place-items-center rounded-full text-primary hover:bg-surface-raised"
+        className="absolute top-4 right-4 grid size-8 place-items-center rounded-full text-primary hover:bg-surface-raised"
       >
         <X className="size-4" aria-hidden />
       </button>
-      <div className="px-6 pt-6 pb-4 text-center">
+      <div className="flex flex-col items-center gap-4 px-6 py-[22px] text-center">
         <ThankYouIcon />
-        <h1 id="receipt-title" className="mt-3 text-body-lg font-bold text-text-secondary">
+        <h1 id="receipt-title" className="text-body-lg leading-4 font-bold text-text-secondary">
           Seus NFTs agora estão na sua carteira
         </h1>
       </div>
-      <dl className="grid grid-cols-2 border-y border-primary px-6 py-3 text-caption sm:grid-cols-4 sm:divide-x sm:divide-primary/60">
-        <div className="sm:pr-3">
-          <dt className="font-bold">ID da transação</dt>
-          <dd className="text-text-secondary">{order.txHash ? shortAddress(order.txHash) : '—'}</dd>
-        </div>
-        <div className="sm:px-3">
-          <dt className="text-text-secondary">Data</dt>
-          <dd className="text-text-secondary">{formatDate(order.settledAt ?? order.createdAt)}</dd>
-        </div>
-        <div className="mt-2 sm:mt-0 sm:px-3">
-          <dt className="text-text-secondary">Total</dt>
-          <dd className="text-text-secondary">{formatEth(order.total)}</dd>
-        </div>
-        <div className="mt-2 sm:mt-0 sm:pl-3">
-          <dt className="font-bold">Carteira</dt>
-          <dd className="text-text-secondary">{WALLET_PROVIDER_LABEL[order.wallet.provider]}</dd>
-        </div>
+      <dl className="grid grid-cols-2 gap-3 border-y border-primary px-6 py-3 text-text-secondary sm:flex sm:h-[67px] sm:items-center sm:justify-between sm:gap-0 sm:px-9 sm:py-1">
+        {meta.map((item, i) => (
+          <Fragment key={item.term}>
+            {i > 0 && <span aria-hidden className="hidden h-[31px] w-px bg-primary sm:block" />}
+            <div>
+              <dt className={cn('text-body leading-4', item.strong && 'font-bold')}>{item.term}</dt>
+              <dd className="text-[15px] leading-5">{item.value}</dd>
+            </div>
+          </Fragment>
+        ))}
       </dl>
-      <div className="space-y-4 px-6 py-5 sm:px-9">
-        <h2 className="text-body font-bold">Detalhes da transação</h2>
-        <OrderLines lines={order.items} compact />
-        <dl className="space-y-1 text-body sm:pl-32">
-          <div className="flex justify-between">
-            <dt>Subtotal</dt>
-            <dd className="tabular-nums">{formatEth(order.subtotal)}</dd>
-          </div>
+      <div className="space-y-3 px-6 pt-5 pb-12 sm:px-11">
+        <h2 className="text-[15px] leading-4 font-bold">Detalhes da transação</h2>
+        <table className="w-full text-left">
+          <caption className="sr-only">Itens comprados</caption>
+          <thead>
+            <tr className="text-body-lg leading-4">
+              <th scope="col" className="border-b border-primary/30 pb-3 font-bold">
+                NFTs
+              </th>
+              <th scope="col" className="w-[91px] border-b border-primary/30 pb-3 font-bold">
+                Edições
+              </th>
+              <th
+                scope="col"
+                className="w-[103px] border-b border-primary/30 pb-3 text-right font-medium"
+              >
+                Subtotal
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {order.items.map((line) => (
+              <tr key={`${line.nftId}-${line.editionId}`}>
+                <td className="pt-3">
+                  <div className="flex items-center gap-3">
+                    <NftImage
+                      art={line.art}
+                      alt=""
+                      sizes="70px"
+                      className="w-14 rounded-lg sm:w-[70px]"
+                    />
+                    <div className="min-w-0">
+                      <p className="truncate text-body-lg leading-4 font-bold">{line.name}</p>
+                      <p className="mt-1.5 text-body leading-4 text-text-muted">
+                        ID do token: {line.tokenId}
+                      </p>
+                    </div>
+                  </div>
+                </td>
+                <td className="pt-3 text-body leading-4 text-text-secondary">
+                  (x {line.quantity})
+                </td>
+                <td className="pt-3 text-right text-[18px] leading-4 font-bold whitespace-nowrap text-text-accent tabular-nums">
+                  {formatEth(line.lineTotal)}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <dl className="ml-auto max-w-[321px] space-y-3 pt-3 text-[15px] leading-5">
           {!eth.isZero(order.discount) && (
-            <div className="flex justify-between">
+            <div className="flex items-center justify-between">
               <dt>Desconto {order.couponCode && `(${order.couponCode})`}</dt>
               <dd className="text-success tabular-nums">(-) {formatEth(order.discount)}</dd>
             </div>
           )}
-          <div className="flex justify-between">
+          <div className="flex items-center justify-between">
             <dt>Taxa de rede</dt>
-            <dd className="tabular-nums">{formatEth(order.networkFee)}</dd>
+            <dd className="text-[18px] leading-4 tabular-nums">{formatEth(order.networkFee)}</dd>
           </div>
-          <div className="flex justify-between border-b border-border pb-2 font-bold">
-            <dt>Total</dt>
-            <dd className="text-primary tabular-nums">{formatEth(order.total)}</dd>
+          <div className="flex items-center justify-between font-bold">
+            <dt className="text-body-lg leading-4">Total</dt>
+            <dd className="text-[18px] leading-4 text-text-accent tabular-nums">
+              {formatEth(order.total)}
+            </dd>
           </div>
         </dl>
-        <p className="text-center text-caption text-text-secondary">
-          Transação confirmada na {NETWORK_LABEL[order.network]}. A propriedade foi transferida para
-          sua carteira {order.wallet.label} ({shortAddress(order.wallet.address)}) e registrada na
-          rede.
-        </p>
-        {order.explorerUrl && (
-          <div className="text-center">
-            <a
-              href={order.explorerUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={buttonVariants({ className: 'h-10' })}
-            >
-              Ver no Etherscan <ExternalLink aria-hidden />
-              <span className="sr-only">(abre em nova aba; transação simulada)</span>
-            </a>
-            <p className="mt-2 text-tiny text-text-secondary">
-              Referência simulada: o hash não existe na rede real.
-            </p>
-          </div>
-        )}
+        <div className="flex min-h-[134px] flex-col items-center justify-between gap-4 border-t border-primary/30 pt-3 text-center">
+          <p className="text-body leading-[22px] text-text-secondary">
+            Transação confirmada na {NETWORK_LABEL[order.network]}. A propriedade foi transferida
+            para sua carteira {order.wallet.label} ({shortAddress(order.wallet.address)}) e
+            registrada na rede.
+          </p>
+          {order.explorerUrl && (
+            <div>
+              <a
+                href={order.explorerUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={buttonVariants({
+                  className: 'h-10 rounded-md px-3.5 text-body-lg leading-5',
+                })}
+              >
+                Ver no Etherscan <ExternalLink aria-hidden />
+                <span className="sr-only">(abre em nova aba; transação simulada)</span>
+              </a>
+              <p className="mt-2 text-tiny text-text-secondary">
+                Referência simulada: o hash não existe na rede real.
+              </p>
+            </div>
+          )}
+        </div>
       </div>
     </article>
   )

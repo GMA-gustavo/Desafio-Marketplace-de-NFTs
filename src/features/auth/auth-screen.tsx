@@ -28,7 +28,7 @@ const COPY: Record<Mode, { title: string; description: string; mobileTitle: stri
 
 function ModeTabs({ mode, redirect }: { mode: Mode; redirect?: string }) {
   const tab =
-    'text-title font-bold transition-colors hover:text-primary aria-[current=page]:text-primary'
+    'text-title leading-4 font-medium transition-colors hover:text-primary aria-[current=page]:text-text-accent'
   return (
     <nav aria-label="Entrar ou criar conta" className="flex items-center justify-center gap-2">
       <Link
@@ -41,7 +41,7 @@ function ModeTabs({ mode, redirect }: { mode: Mode; redirect?: string }) {
       >
         Entrar
       </Link>
-      <span aria-hidden className="h-5 w-px bg-primary" />
+      <span aria-hidden className="h-5 w-px bg-coral" />
       <Link
         to="/cadastro"
         search={{ redirect }}
@@ -77,13 +77,18 @@ export function AuthScreen({ mode, redirect }: { mode: Mode; redirect?: string }
           </Suspense>
         </div>
         <Dialog open onOpenChange={(open) => !open && close()}>
-          <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto border-b-8 border-primary bg-surface-card p-10 sm:max-w-md">
+          {/* Sign In Modal do Figma: 500 × 600, faixa laranja de 10 px na base e recuo de 80 px. */}
+          <DialogContent className="block max-h-[calc(100dvh-2rem)] min-h-[600px] gap-0 overflow-y-auto rounded-none border-b-[10px] border-primary bg-surface-card p-0 pt-12 pb-10 ring-0 sm:max-w-[500px]">
             <DialogTitle className="sr-only">{copy.title}</DialogTitle>
-            <ModeTabs mode={mode} redirect={redirect} />
-            <DialogDescription className="text-center text-body text-foreground">
-              {copy.description}
-            </DialogDescription>
-            <Form redirect={redirect} />
+            <div className="flex flex-col items-center gap-10 px-12">
+              <ModeTabs mode={mode} redirect={redirect} />
+              <DialogDescription className="text-center text-[13px] leading-4 text-foreground">
+                {copy.description}
+              </DialogDescription>
+            </div>
+            <div className="px-20 pt-6">
+              <Form redirect={redirect} dialog />
+            </div>
           </DialogContent>
         </Dialog>
       </>
@@ -91,13 +96,16 @@ export function AuthScreen({ mode, redirect }: { mode: Mode; redirect?: string }
   }
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-md flex-col justify-center px-6 py-12">
-      <p className="text-center text-heading font-bold tracking-[0.12em]">
+    // Frames Mobile / Login e Cadastro: 80 px no topo, logo numa faixa de 136 px e 40 px entre os blocos.
+    <div className="mx-auto flex min-h-dvh max-w-md flex-col px-7 pt-20 pb-6">
+      <p className="grid h-[136px] place-items-center text-[32px] leading-none font-bold tracking-[0.1em]">
         <Link to="/">KURIO</Link>
       </p>
-      <h1 className={cn('mt-14 mb-6 text-center text-title font-bold')}>{copy.mobileTitle}</h1>
+      <h1 className={cn('mt-10 mb-10 text-center text-title leading-4 font-bold')}>
+        {copy.mobileTitle}
+      </h1>
       <Form redirect={redirect} />
-      <p className="mt-10 text-center text-body">
+      <p className="mt-10 text-center text-[15px] leading-5 text-text-secondary">
         {mode === 'login' ? (
           <>
             Novo na Kurio?{' '}
@@ -105,7 +113,7 @@ export function AuthScreen({ mode, redirect }: { mode: Mode; redirect?: string }
               to="/cadastro"
               search={{ redirect }}
               replace
-              className="text-primary hover:underline"
+              className="text-text-accent hover:underline"
             >
               Crie uma conta
             </Link>
@@ -117,7 +125,7 @@ export function AuthScreen({ mode, redirect }: { mode: Mode; redirect?: string }
               to="/entrar"
               search={{ redirect }}
               replace
-              className="text-primary hover:underline"
+              className="text-text-accent hover:underline"
             >
               Entre
             </Link>

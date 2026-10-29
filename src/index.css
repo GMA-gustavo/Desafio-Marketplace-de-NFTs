@@ -55,15 +55,15 @@
 
   /* Tokens semânticos (shadcn) */
   --background: var(--kurio-ink);
-  --foreground: var(--kurio-text-primary);
+  --foreground: var(--kurio-foreground);
   --card: var(--kurio-surface-card);
-  --card-foreground: var(--kurio-text-primary);
+  --card-foreground: var(--kurio-foreground);
   --popover: var(--kurio-surface-raised);
-  --popover-foreground: var(--kurio-text-primary);
+  --popover-foreground: var(--kurio-foreground);
   --primary: var(--kurio-primary);
   --primary-foreground: var(--kurio-ink);
   --secondary: var(--kurio-surface-dark);
-  --secondary-foreground: var(--kurio-text-primary);
+  --secondary-foreground: var(--kurio-foreground);
   --muted: var(--kurio-surface-raised);
   --muted-foreground: var(--kurio-text-secondary);
   --accent: var(--kurio-surface-raised);
@@ -112,6 +112,7 @@
   --color-amber: var(--kurio-amber);
   --color-text-secondary: var(--kurio-text-secondary);
   --color-text-accent: var(--kurio-text-accent);
+  --color-text-muted: var(--kurio-secondary);
   --color-coral: var(--kurio-text-coral);
 
   --radius-sm: calc(var(--radius) * 0.5);
@@ -137,7 +138,8 @@
   --text-caption--line-height: 1.125rem;
   --text-tiny: 0.625rem;
 
-  --container-page: 75rem;
+  /* 1200px de conteúdo + 2 × 24px do padding do Container. */
+  --container-page: 78rem;
 
   --animate-shimmer: shimmer 1.6s ease-in-out infinite;
 

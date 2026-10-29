@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils'
 
-/** Largura útil do Figma: 1440px de frame com 120px de padding lateral = 1200px. */
+/** Largura útil do Figma: 1200 px no desktop; 24 px de recuo lateral nos frames mobile. */
 export function Container({ className, ...props }: React.ComponentProps<'div'>) {
-  return <div className={cn('mx-auto w-full max-w-page px-4 md:px-6', className)} {...props} />
+  return <div className={cn('mx-auto w-full max-w-page px-6', className)} {...props} />
 }

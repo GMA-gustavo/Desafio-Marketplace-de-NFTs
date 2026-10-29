@@ -13,12 +13,13 @@ export function PasswordInput({ className, ...props }: React.ComponentProps<'inp
         onClick={() => setVisible((v) => !v)}
         aria-label={visible ? 'Ocultar senha' : 'Mostrar senha'}
         aria-pressed={visible}
-        className="absolute inset-y-0 right-0 grid w-10 place-items-center text-text-secondary hover:text-primary"
+        className="absolute inset-y-0 right-0 grid w-12 place-items-center text-text-muted hover:text-primary"
       >
+        {/* Como no Figma (Iconly "Hide"): o olho cortado indica a senha oculta. */}
         {visible ? (
-          <EyeOff className="size-4" aria-hidden />
+          <Eye className="size-5" aria-hidden />
         ) : (
-          <Eye className="size-4" aria-hidden />
+          <EyeOff className="size-5" aria-hidden />
         )}
       </button>
     </div>
