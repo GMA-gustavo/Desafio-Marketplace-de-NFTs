@@ -197,7 +197,7 @@ Por padrão a auditoria roda contra o build local, servido por um servidor que r
 mesmos cabeçalhos de cache); a justificativa está no README da pasta.
 
 O deploy publicado também foi auditado, com resultados em [lighthouse/deploy/](lighthouse/deploy/README.md). Os números
-ficam próximos dos locais: Início mobile 94 (LCP 2,82 s), Detalhe mobile 96 (LCP 2,73 s) e 100 no desktop, com 100 em
+ficam próximos dos locais: Início mobile 91 (LCP 2,97 s), Detalhe mobile 93 (LCP 2,74 s) e 100 no desktop, com 100 em
 acessibilidade, boas práticas e SEO em todas as linhas. Para refazer:
 
 ```bash
