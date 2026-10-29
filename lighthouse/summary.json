@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-28T20:13:40.825Z",
+  "generatedAt": "2026-10-29T18:52:02.202Z",
   "runs": 3,
   "targets": {
     "performance": 90,
@@ -16,7 +16,7 @@
     "cpu": "AMD Ryzen 7 5700X3D 8-Core Processor",
     "cores": 16,
     "memoryGb": 16,
-    "benchmarkIndex": 2896
+    "benchmarkIndex": 2785
   },
   "results": [
     {
@@ -25,17 +25,17 @@
       "formFactor": "Mobile",
       "report": "inicio-mobile",
       "scores": {
-        "performance": 95,
+        "performance": 94,
         "accessibility": 100,
         "best-practices": 100,
         "seo": 100
       },
       "metrics": {
-        "largest-contentful-paint": 2555.377,
-        "cumulative-layout-shift": 0.01944106925880923,
-        "total-blocking-time": 163,
-        "first-contentful-paint": 752.877,
-        "speed-index": 1443.1753520471098
+        "largest-contentful-paint": 2593.0995000000003,
+        "cumulative-layout-shift": 0,
+        "total-blocking-time": 184,
+        "first-contentful-paint": 902.0545,
+        "speed-index": 1530.5205154088912
       },
       "runs": [
         {
@@ -46,26 +46,26 @@
             "seo": 100
           },
           "metrics": {
-            "largest-contentful-paint": 2558.2889999999998,
-            "cumulative-layout-shift": 0.01944106925880923,
-            "total-blocking-time": 191,
-            "first-contentful-paint": 755.289,
-            "speed-index": 1480.6406157672845
+            "largest-contentful-paint": 2605.7315,
+            "cumulative-layout-shift": 0,
+            "total-blocking-time": 184,
+            "first-contentful-paint": 905.7315,
+            "speed-index": 1530.5205154088912
           }
         },
         {
           "scores": {
-            "performance": 96,
+            "performance": 93,
             "accessibility": 100,
             "best-practices": 100,
             "seo": 100
           },
           "metrics": {
-            "largest-contentful-paint": 2555.377,
-            "cumulative-layout-shift": 0.01944106925880923,
-            "total-blocking-time": 137,
-            "first-contentful-paint": 752.877,
-            "speed-index": 1443.1753520471098
+            "largest-contentful-paint": 2585.0545,
+            "cumulative-layout-shift": 0,
+            "total-blocking-time": 228,
+            "first-contentful-paint": 902.0545,
+            "speed-index": 1598.7184365977887
           }
         },
         {
@@ -76,11 +76,11 @@
             "seo": 100
           },
           "metrics": {
-            "largest-contentful-paint": 2552.732,
-            "cumulative-layout-shift": 0.01944106925880923,
-            "total-blocking-time": 163,
-            "first-contentful-paint": 752.232,
-            "speed-index": 1289.423725952909
+            "largest-contentful-paint": 2593.0995000000003,
+            "cumulative-layout-shift": 0,
+            "total-blocking-time": 169,
+            "first-contentful-paint": 901.0995,
+            "speed-index": 1519.8746047321085
           }
         }
       ]
@@ -97,11 +97,11 @@
         "seo": 100
       },
       "metrics": {
-        "largest-contentful-paint": 536.3735,
-        "cumulative-layout-shift": 0.01086933426728541,
+        "largest-contentful-paint": 544.443,
+        "cumulative-layout-shift": 0.009751930654058313,
         "total-blocking-time": 0,
-        "first-contentful-paint": 240.79749999999999,
-        "speed-index": 412.0351653792984
+        "first-contentful-paint": 242.5555,
+        "speed-index": 425.0828880658854
       },
       "runs": [
         {
@@ -112,11 +112,11 @@
             "seo": 100
           },
           "metrics": {
-            "largest-contentful-paint": 536.2855,
-            "cumulative-layout-shift": 0.01086933426728541,
+            "largest-contentful-paint": 550.0554999999999,
+            "cumulative-layout-shift": 0.009751930654058313,
             "total-blocking-time": 0,
-            "first-contentful-paint": 202.2855,
-            "speed-index": 413.5190120762102
+            "first-contentful-paint": 242.5555,
+            "speed-index": 376.91278910332466
           }
         },
         {
@@ -127,11 +127,11 @@
             "seo": 100
           },
           "metrics": {
-            "largest-contentful-paint": 536.3735,
-            "cumulative-layout-shift": 0.01086933426728541,
+            "largest-contentful-paint": 542.921,
+            "cumulative-layout-shift": 0.009751930654058313,
             "total-blocking-time": 0,
-            "first-contentful-paint": 240.8735,
-            "speed-index": 391.0581192050753
+            "first-contentful-paint": 242.921,
+            "speed-index": 425.0828880658854
           }
         },
         {
@@ -142,11 +142,11 @@
             "seo": 100
           },
           "metrics": {
-            "largest-contentful-paint": 536.7975,
-            "cumulative-layout-shift": 0.01086933426728541,
+            "largest-contentful-paint": 544.443,
+            "cumulative-layout-shift": 0.009751930654058313,
             "total-blocking-time": 0,
-            "first-contentful-paint": 240.79749999999999,
-            "speed-index": 412.0351653792984
+            "first-contentful-paint": 242.443,
+            "speed-index": 430.1756972754192
           }
         }
       ]
@@ -157,19 +157,34 @@
       "formFactor": "Mobile",
       "report": "detalhe-mobile",
       "scores": {
-        "performance": 97,
+        "performance": 96,
         "accessibility": 100,
         "best-practices": 100,
         "seo": 100
       },
       "metrics": {
-        "largest-contentful-paint": 2408.902,
+        "largest-contentful-paint": 2518.779,
         "cumulative-layout-shift": 0,
-        "total-blocking-time": 105,
-        "first-contentful-paint": 752.378,
-        "speed-index": 909.0668259424685
+        "total-blocking-time": 147,
+        "first-contentful-paint": 902.0615,
+        "speed-index": 914.1750059735775
       },
       "runs": [
+        {
+          "scores": {
+            "performance": 96,
+            "accessibility": 100,
+            "best-practices": 100,
+            "seo": 100
+          },
+          "metrics": {
+            "largest-contentful-paint": 2518.779,
+            "cumulative-layout-shift": 0,
+            "total-blocking-time": 147,
+            "first-contentful-paint": 901.779,
+            "speed-index": 939.7827213750998
+          }
+        },
         {
           "scores": {
             "performance": 95,
@@ -178,41 +193,26 @@
             "seo": 100
           },
           "metrics": {
-            "largest-contentful-paint": 2408.902,
+            "largest-contentful-paint": 2528.4674999999997,
             "cumulative-layout-shift": 0,
-            "total-blocking-time": 188,
-            "first-contentful-paint": 751.902,
-            "speed-index": 978.9929140178443
+            "total-blocking-time": 160,
+            "first-contentful-paint": 902.4675,
+            "speed-index": 914.1750059735775
           }
         },
         {
           "scores": {
-            "performance": 97,
+            "performance": 96,
             "accessibility": 100,
             "best-practices": 100,
             "seo": 100
           },
           "metrics": {
-            "largest-contentful-paint": 2411.4075000000003,
+            "largest-contentful-paint": 2517.0615,
             "cumulative-layout-shift": 0,
-            "total-blocking-time": 100,
-            "first-contentful-paint": 752.4075,
-            "speed-index": 877.7976259483099
-          }
-        },
-        {
-          "scores": {
-            "performance": 97,
-            "accessibility": 100,
-            "best-practices": 100,
-            "seo": 100
-          },
-          "metrics": {
-            "largest-contentful-paint": 2404.378,
-            "cumulative-layout-shift": 0,
-            "total-blocking-time": 105,
-            "first-contentful-paint": 752.378,
-            "speed-index": 909.0668259424685
+            "total-blocking-time": 139,
+            "first-contentful-paint": 902.0615,
+            "speed-index": 902.0615
           }
         }
       ]
@@ -229,11 +229,11 @@
         "seo": 100
       },
       "metrics": {
-        "largest-contentful-paint": 520.081,
-        "cumulative-layout-shift": 0.00333083267664828,
+        "largest-contentful-paint": 525.74,
+        "cumulative-layout-shift": 0.00557184134489099,
         "total-blocking-time": 0,
-        "first-contentful-paint": 241.081,
-        "speed-index": 314.0891445339688
+        "first-contentful-paint": 241.74,
+        "speed-index": 297.3875247375905
       },
       "runs": [
         {
@@ -244,11 +244,11 @@
             "seo": 100
           },
           "metrics": {
-            "largest-contentful-paint": 520.081,
-            "cumulative-layout-shift": 0.00333083267664828,
+            "largest-contentful-paint": 528.607,
+            "cumulative-layout-shift": 0.00557184134489099,
             "total-blocking-time": 0,
-            "first-contentful-paint": 241.081,
-            "speed-index": 291.4898701666365
+            "first-contentful-paint": 242.607,
+            "speed-index": 297.3875247375905
           }
         },
         {
@@ -259,11 +259,11 @@
             "seo": 100
           },
           "metrics": {
-            "largest-contentful-paint": 519.467,
-            "cumulative-layout-shift": 0.00333083267664828,
+            "largest-contentful-paint": 525.242,
+            "cumulative-layout-shift": 0.00557184134489099,
             "total-blocking-time": 0,
-            "first-contentful-paint": 241.46699999999998,
-            "speed-index": 314.0891445339688
+            "first-contentful-paint": 241.242,
+            "speed-index": 346.30278555940015
           }
         },
         {
@@ -274,11 +274,11 @@
             "seo": 100
           },
           "metrics": {
-            "largest-contentful-paint": 522.615,
-            "cumulative-layout-shift": 0.00333083267664828,
-            "total-blocking-time": 2,
-            "first-contentful-paint": 202.615,
-            "speed-index": 342.41806609506114
+            "largest-contentful-paint": 525.74,
+            "cumulative-layout-shift": 0.00557184134489099,
+            "total-blocking-time": 0,
+            "first-contentful-paint": 241.74,
+            "speed-index": 294.42005449531973
           }
         }
       ]

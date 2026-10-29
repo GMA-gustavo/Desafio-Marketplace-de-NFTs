@@ -207,7 +207,8 @@ function Purchase({ nft, editionId }: { nft: NftDetail; editionId: EditionId }) 
                   className={cn(
                     'h-7 rounded-full border border-border px-1.5 text-body leading-4 text-text-secondary transition-colors hover:border-primary',
                     selected && 'border-primary font-medium text-text-accent',
-                    unavailable && 'line-through opacity-60',
+                    // Esgotada: riscada em Color/Secondary (6,9:1); opacidade derrubaria o contraste.
+                    unavailable && 'border-dashed text-text-muted line-through',
                   )}
                 >
                   {EDITION_LABEL[e.id]}

@@ -63,20 +63,25 @@ export function NftRow({ title, query }: { title: string; query: CatalogQuery })
         <div
           role="group"
           aria-label={`Grupos de ${title}`}
-          className="mt-8 hidden justify-center gap-2 md:flex"
+          className="mt-8 hidden justify-center md:flex"
         >
           {Array.from({ length: groups }, (_, i) => (
+            // Alvo de 24 px em volta do ponto de 12 px do Figma (área mínima de toque).
             <button
               key={i}
               type="button"
               onClick={() => setGroup(i)}
               aria-label={`Mostrar grupo ${i + 1} de ${groups}`}
               aria-current={i === current ? 'true' : undefined}
-              className={cn(
-                'relative size-3 rounded-full border-[1.3px] border-primary transition-colors after:absolute after:-inset-1.5 hover:bg-primary/40',
-                i === current && 'bg-primary hover:bg-primary',
-              )}
-            />
+              className="group grid size-6 place-items-center"
+            >
+              <span
+                className={cn(
+                  'block size-3 rounded-full border-[1.3px] border-primary transition-colors group-hover:bg-primary/40',
+                  i === current && 'bg-primary group-hover:bg-primary',
+                )}
+              />
+            </button>
           ))}
         </div>
       )}
